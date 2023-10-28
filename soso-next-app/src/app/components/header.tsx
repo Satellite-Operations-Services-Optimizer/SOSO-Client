@@ -3,13 +3,19 @@ import Link from 'next/link';
 const Header: React.FC = () => {
   return (
     <header style={headerStyle}>
-      <h1>Satellite Operations Service Optimizer</h1>
+      <h1 style={headerText}>Satellite Operations Service Optimizer</h1>
       <Link href="/login" style={loginButtonStyle}>
          Log In
       </Link>
     </header>
   );
 };
+
+const headerText = {
+  fontSize: '24px',
+  fontFamily: 'Arial, sans-serif', // Change the font family
+  fontWeight: 'bold', // Make the font bold
+}
 
 const headerStyle = {
   display: 'flex',
