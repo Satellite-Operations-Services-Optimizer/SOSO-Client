@@ -8,7 +8,13 @@ Before you start, ensure you have the following installed:
 
 ## Getting Started
 
-First, run the development server:
+Install project dependencies:
+
+```bash
+npm install
+```
+
+Then, run the development server:
 
 ```bash
 npm run dev
