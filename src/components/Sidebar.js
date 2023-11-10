@@ -47,6 +47,8 @@ const Sidebar = ({hideShowSidebar}) => {
                     </Button>
                     {dropdown3 && <div className={styles.dropdownMenu}>
                         <Link href="/assetStatus" className={router.pathname === '/assetStatus' ? styles.active : ''}><RxPieChart /><span>Asset Status</span></Link>
+                        <Link href="/addGS" className={router.pathname === '/addGS' ? styles.active : ''}><RxPieChart /><span>Add GS</span></Link>
+                        <Link href="/addSAT" className={router.pathname === '/addSAT' ? styles.active : ''}><RxPieChart /><span>Add SAT</span></Link>
                     </div>}
                 </div>
                 <div className={styles.sidebarNavigation}>
