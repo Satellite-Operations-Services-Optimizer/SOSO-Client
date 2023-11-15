@@ -37,7 +37,8 @@ const Sidebar = ({hideShowSidebar}) => {
                         Schedule Request {dropdown2 ? <IoIosArrowUp /> : <IoIosArrowDown />}
                     </Button>
                     {dropdown2 && <div className={styles.dropdownMenu}>
-                        <Link href="/maintenanceRequest" className={router.pathname === '/maintenanceRequest' ? styles.active : ''}><RxPieChart /><span>Maintenance Request input form</span></Link>
+                        <Link href="/maintenanceRequest" className={router.pathname === '/maintenanceRequest' ? styles.active : ''}><RxPieChart /><span>Maintenance Request Input Form</span></Link>
+                        <Link href="/outageRequest" className={router.pathname === '/outageRequest' ? styles.active : ''}><RxPieChart/><span>Outage Request Input Form</span></Link>
                         <Link href="/" className={router.pathname === '/schedule' ? styles.active : ''}><CiShop/><span>Schedule page</span></Link>
                     </div>}
                 </div>
