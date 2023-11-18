@@ -37,7 +37,7 @@ export default function AddGS() {
                     <Form.Control type="text" />
                   </Form.Group>
                   <Form.Group as={Col} md={6} className={styles.formGroup}>
-                    <Form.Label>Height</Form.Label>
+                    <Form.Label>Elevation</Form.Label>
                     <Form.Control type="text" />
                   </Form.Group>
                   <Form.Group as={Col} md={6} className={styles.formGroup}>
