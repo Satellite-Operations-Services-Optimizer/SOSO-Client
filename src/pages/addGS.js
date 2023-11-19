@@ -3,13 +3,13 @@ import Head from 'next/head'
 import { Container, Form, Button, Row, Col } from 'react-bootstrap'
 import Sidebar from '../components/Sidebar'
 import DashBoardHeader from '../components/DashBoardHeader'
-import DataTable from '../components/DataTable'
+import GroundStationModal from '../components/GroundStationModal'
 import styles from '../styles/dashboard.module.scss'
 import axios from "axios";
 
 export default function AddGS() {
   const [hideShowSidebar, setHideShowSidebar] = useState(true);
-
+  const [modalShow, setModalShow] = useState(false);
   return (
     <>
       <Head>
@@ -61,7 +61,7 @@ export default function AddGS() {
                     <Form.Control type="text"/>
                   </Form.Group>
                   <Form.Group as={Col} md={6} className={styles.formGroup}>
-                    <Button type="submit" className={styles.submitBtn}>Submit</Button>
+                    <Button type="button" className={styles.submitBtn} onClick={() => setModalShow(true)}>Submit</Button>
                   </Form.Group>
                 </Row>
               </Form>
@@ -69,6 +69,10 @@ export default function AddGS() {
           </div>
         </div>
       </main>
+      <GroundStationModal 
+        show={modalShow}
+        onHide={() => setModalShow(false)}
+      />
     </>
   )
 }

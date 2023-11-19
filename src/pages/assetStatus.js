@@ -93,7 +93,8 @@ export default function AssetStatus() {
   useEffect(() => {
     // just change the url and uncomment the inner code
     axios.get("https://jsonplaceholder.typicode.com/users").then((response) => {
-      // setData(response.data);
+        
+    // setData(response.data);
     });
 
     const intervalId = setInterval(() => {
