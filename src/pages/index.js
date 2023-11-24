@@ -10,39 +10,39 @@ import axios from "axios";
 const columns = [
   {
     Header: 'Target',
-    accessor: 'target', // Property name in data
+    accessor: 'id', // Property name in data
   },
   {
-    Header: 'Activity',
-    accessor: 'activity',
+    Header: 'Satellite',
+    accessor: 'satellite_id',
+  },
+  {
+    Header: 'Ground Station',
+    accessor: 'ground_station_id',
   },
   {
     Header: 'Window Start',
-    accessor: 'windowStart',
+    accessor: 'start_time',
   },
   {
-    Header: 'WindowEnd',
-    accessor: 'windowEnd',
+    Header: 'Window End',
+    accessor: 'end_time',
   },
   {
-    Header: 'Duration',
-    accessor: 'duration',
+    Header: 'Status',
+    accessor: 'status',
   },
   {
-    Header: 'RepeatCycle Frequency MinimumGap',
-    accessor: 'repeatCycleFrequencyMinimumGap',
+    Header: 'Image Order',
+    accessor: 'image_id',
   },
   {
-    Header: 'RepeatCycle Frequency MaximumGap',
-    accessor: 'repeatCycleFrequencyMaximumGap',
+    Header: 'Maintenance Order',
+    accessor: 'maintenance_id',
   },
   {
-    Header: 'RepeatCycle Repetition',
-    accessor: 'repeatCycleRepetition',
-  },
-  {
-    Header: 'PayloadOutage',
-    accessor: 'payloadOutage',
+    Header: 'Outage Order',
+    accessor: 'outage_id',
   },
   {
     Header: '',
@@ -54,7 +54,7 @@ const columns = [
   // Add more columns as needed
 ];
 
-const data = [{
+/* const data = [{
   target: "SOSO-1",
   activity: "MemoryScrub",
   windowStart: "2023-10-08 T00:00:00",
@@ -64,17 +64,17 @@ const data = [{
   repeatCycleFrequencyMaximumGap: "216000",
   repeatCycleRepetition: "3",
   payloadOutage: "TRUE"
-}];
+}]; */
 
 export default function Home() {
   // uncomment the below line when you add link in axios
-  // const [data, setData] = useState([]);
+  const [data, setData] = useState([]);
   const [hideShowSidebar, setHideShowSidebar] = useState(true);
 
   useEffect(() => {
     // just change the url and uncomment the inner code
-    axios.get("https://jsonplaceholder.typicode.com/users").then((response) => {
-      // setData(response.data);
+    axios.get("http://127.0.0.1:1527/schedules/complete").then((response) => {
+      setData(response.data.data);
     });
   }, []);
   
