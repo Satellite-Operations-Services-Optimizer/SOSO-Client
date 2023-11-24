@@ -12,7 +12,7 @@ import Link from 'next/link';
 const Sidebar = ({hideShowSidebar}) => {
     const router = useRouter();
     const [open, setOpen] = useState(true);
-    const [dropdown1, setDropdown1] = useState(true);
+    const [dropdown1, setDropdown1] = useState(false);
     const [dropdown2, setDropdown2] = useState(false);
     const [dropdown3, setDropdown3] = useState(false);
     const [dropdown4, setDropdown4] = useState(false);

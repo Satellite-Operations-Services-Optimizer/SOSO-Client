@@ -3,12 +3,14 @@ import Head from 'next/head'
 import { Container, Button, Form, Row, Col } from 'react-bootstrap'
 import Sidebar from '../components/Sidebar'
 import DashBoardHeader from '../components/DashBoardHeader'
-import DataTable from '../components/DataTable'
+import MaintenanceOrderModal from '../components/MaintenanceOrderModal'
 import styles from '../styles/dashboard.module.scss'
 
 
 export default function MaintenanceRequest() {
   const [hideShowSidebar, setHideShowSidebar] = useState(true);
+  const [modalShow, setModalShow] = useState(false);
+  const [maintenanceId, setMaintenanceId] = useState("ID (int)");
   return (
     <>
       <Head>
@@ -72,13 +74,18 @@ export default function MaintenanceRequest() {
                       </Form.Select>
                     </Form.Group>
                   </Row>
-                  <Button type="submit">Submit Data</Button>
+                  <Button type="button"  onClick={() => setModalShow(true)}>Submit Data</Button>
                 </Form>
               </div>
             </Container>
           </div>
         </div>
       </main>
+      <MaintenanceOrderModal
+        show={modalShow}
+        onHide={() => setModalShow(false)}
+        maintenanceId={maintenanceId}
+      />
     </>
   )
 }

@@ -1,14 +1,17 @@
 import React, { useState } from "react";
 import Head from 'next/head'
-import { Container, Form, Button, Row, Col } from 'react-bootstrap'
+import { Container, Form, Button, Row, Col, Modal } from 'react-bootstrap'
 import Sidebar from '../components/Sidebar'
 import DashBoardHeader from '../components/DashBoardHeader'
+import SatelliteModal from '../components/SatelliteModal'
 import styles from '../styles/dashboard.module.scss'
 
 export default function AddSAT() {
   const [hideShowSidebar, setHideShowSidebar] = useState(true);
   const [checkJson, setCheckJson] = useState();
   const [jsonFileName, setJsonFileName] = useState("");
+  const [modalShow, setModalShow] = useState("");
+  const [satelliteName, setSatelliteName] = useState("Name");
 
   const jsonFileUpload = (event) => {
     const file = event.target.files[0];
@@ -69,7 +72,7 @@ export default function AddSAT() {
                             <input type="file" accept=".json, .txt" onChange={jsonFileUpload} />
                             <span className={checkJson ? styles.red : ""}>{jsonFileName ? jsonFileName : "Upload only JSON or Text File"}</span>
                           </div>
-                          <Button type="submit" className={styles.submitBtn}>Submit</Button>
+                          <Button type="button" className={styles.submitBtn} onClick={() => setModalShow(true)}>Submit</Button>
                       </Col>
                     </Row>
                   </Form>
@@ -78,6 +81,11 @@ export default function AddSAT() {
           </div>
         </div>
       </main>
+      <SatelliteModal 
+        show={modalShow}
+        onHide={() => setModalShow(false)}
+        satelliteName={satelliteName}
+      />
     </>
   )
 }
