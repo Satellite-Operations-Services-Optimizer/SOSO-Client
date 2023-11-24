@@ -1,27 +1,28 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import Head from 'next/head'
 import { Container, Button } from 'react-bootstrap'
 import Sidebar from '../components/Sidebar'
 import DashBoardHeader from '../components/DashBoardHeader'
 import DataTable from '../components/DataTable'
 import styles from '../styles/dashboard.module.scss'
+import axios from "axios";
 
 const columns = [
   {
     Header: 'Target',
-    accessor: 'target', // Property name in data
+    accessor: 'asset_name', // Property name in data
   },
   {
     Header: 'Activity',
-    accessor: 'activity',
+    accessor: 'description',
   },
   {
     Header: 'Window Start',
-    accessor: 'windowStart',
+    accessor: 'start_time',
   },
   {
     Header: 'WindowEnd',
-    accessor: 'windowEnd',
+    accessor: 'end_time',
   },
   {
     Header: 'Duration',
@@ -29,31 +30,31 @@ const columns = [
   },
   {
     Header: 'RepeatCycle Frequency MinimumGap',
-    accessor: 'repeatCycleFrequencyMinimumGap',
+    accessor: 'frequency_min',
   },
   {
     Header: 'RepeatCycle Frequency MaximumGap',
-    accessor: 'repeatCycleFrequencyMaximumGap',
+    accessor: 'frequency_max',
   },
   {
     Header: 'RepeatCycle Repetition',
-    accessor: 'repeatCycleRepetition',
+    accessor: 'repetition',
   },
   {
     Header: 'PayloadOutage',
-    accessor: 'payloadOutage',
+    accessor: 'operations_flag',
   },
-  // {
-  //   Header: '',
-  //   accessor: 'actions',
-  //   Cell: () => (
-  //     <Button type="button">Decline</Button>
-  //   ),
-  // },
+   {
+     Header: 'Action',
+     accessor: 'actions',
+     Cell: () => (
+       <Button type="button">Decline</Button>
+     ),
+   },
   // Add more columns as needed
 ];
 
-const data = [{
+/* const data = [{
   target: "SOSO-3",
   activity: "OrbitParameterUpdate",
   windowStart: "2023-10-08 T00:00:00",
@@ -63,10 +64,18 @@ const data = [{
   repeatCycleFrequencyMaximumGap: "691200",
   repeatCycleRepetition: "4",
   payloadOutage: "FALSE"
-}];
+}]; */
 
 export default function OrbitParameterUpdate() {
+  const [data, setData] = useState([]);
   const [hideShowSidebar, setHideShowSidebar] = useState(true);
+  useEffect(() => {
+    // just change the url and uncomment the inner code
+    axios.get("http://127.0.0.1:1527/maintenance/orbit-parameter-updates").then((response) => {
+      setData(response.data.data);
+    });
+  }, []);
+
   return (
     <>
       <Head>
