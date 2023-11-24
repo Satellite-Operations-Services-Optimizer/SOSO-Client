@@ -21,25 +21,25 @@ const columns = [
     accessor: 'priority',
   },
   {
-    Header: 'Image Type',
-    accessor: 'imageType',
+    Header: 'Image Resolution',
+    accessor: 'image_res',
   },
   {
     Header: 'Image Start Time',
-    accessor: 'imageStartTime',
+    accessor: 'start_time',
   },
   {
     Header: 'Image End Time',
-    accessor: 'imageEndTime',
+    accessor: 'end_time',
   },
   {
-    Header: 'Delivery Time',
-    accessor: 'deliveryTime',
+    Header: 'Delivery Deadline',
+    accessor: 'delivery_deadline',
   },
-  {
+/*   {
     Header: 'Revisit Time',
     accessor: 'revisitTime',
-  },
+  }, */
   {
     Header: '',
     accessor: 'actions',
@@ -51,7 +51,7 @@ const columns = [
 ];
 
 // when you add API Url just comment this
-const data = [{
+/* const data = [{
   latitude: -0.3157088942224249,
   longitude: 111.84921138464108,
   priority: 1,
@@ -205,17 +205,17 @@ const data = [{
   deliveryTime: "2023-10-10 T05:58:54",
   revisitTime: "False"
 },
-];
+]; */
 
 export default function ImageOrders() {
   // uncomment the below line when you add link in axios
-  // const [data, setData] = useState([]);
+  const [data, setData] = useState([]);
   const [hideShowSidebar, setHideShowSidebar] = useState(true);
 
   useEffect(() => {
     // just change the url and uncomment the inner code
-    axios.get("https://jsonplaceholder.typicode.com/users").then((response) => {
-      // setData(response.data);
+    axios.get("http://127.0.0.1:1527/images/image-orders").then((response) => {
+      setData(response.data.data);
     });
   }, []);
   
