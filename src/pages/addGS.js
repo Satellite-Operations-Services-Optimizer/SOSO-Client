@@ -10,6 +10,7 @@ import axios from "axios";
 export default function AddGS() {
   const [hideShowSidebar, setHideShowSidebar] = useState(true);
   const [modalShow, setModalShow] = useState(false);
+  const [stationName, setStationName] = useState("Name");
   return (
     <>
       <Head>
@@ -72,6 +73,7 @@ export default function AddGS() {
       <GroundStationModal 
         show={modalShow}
         onHide={() => setModalShow(false)}
+        stationName={stationName}
       />
     </>
   )

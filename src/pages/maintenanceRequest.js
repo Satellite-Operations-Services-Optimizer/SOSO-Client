@@ -10,6 +10,7 @@ import styles from '../styles/dashboard.module.scss'
 export default function MaintenanceRequest() {
   const [hideShowSidebar, setHideShowSidebar] = useState(true);
   const [modalShow, setModalShow] = useState(false);
+  const [maintenanceId, setMaintenanceId] = useState("ID (int)");
   return (
     <>
       <Head>
@@ -83,6 +84,7 @@ export default function MaintenanceRequest() {
       <MaintenanceOrderModal
         show={modalShow}
         onHide={() => setModalShow(false)}
+        maintenanceId={maintenanceId}
       />
     </>
   )

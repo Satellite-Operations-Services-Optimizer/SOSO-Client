@@ -11,6 +11,8 @@ export default function AddSAT() {
   const [checkJson, setCheckJson] = useState();
   const [jsonFileName, setJsonFileName] = useState("");
   const [modalShow, setModalShow] = useState("");
+  const [satelliteName, setSatelliteName] = useState("Name");
+
   const jsonFileUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -82,6 +84,7 @@ export default function AddSAT() {
       <SatelliteModal 
         show={modalShow}
         onHide={() => setModalShow(false)}
+        satelliteName={satelliteName}
       />
     </>
   )
