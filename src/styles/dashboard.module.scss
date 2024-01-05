@@ -1,27 +1,55 @@
 @import 'variables';
 
 .dashboardMainContent {
-  padding: 24px 0 30px;
+  padding: 16px 0 30px;
 
   @media (max-width: 767px) {
-    padding: 20px 0px 25px;
+    padding: 16px 0px 25px;
   } 
 
   .container {
     max-width: 100%;
-    padding: 0 20px;
-
-    @media (max-width: 1199px) {
-      padding: 0 20px;
-    } 
-
-    @media (max-width: 767px) {
-      padding: 0 20px;
-    } 
+    padding: 0 24px 0 16px;
 
     @media (max-width: 375px) {
       padding: 0 12px;
     } 
+  }
+
+  .maintenanceRequestBtn {
+    background: $white;
+    border-radius: 2px;
+    box-shadow: 0 3px 1px -1px rgba($color: $black, $alpha: 0.08),0 1px 3px -1px rgba($color: $black, $alpha: 0.1);
+    color: #212121 !important;
+    cursor: pointer;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 36px;
+    max-width: 100%;
+    position: relative;
+    text-align: center;
+    text-transform: uppercase;
+    transition: box-shadow .3s cubic-bezier(0.4,0,0.2,1);
+    white-space: nowrap;
+    border: 0;
+    padding: 0 10px;
+    min-width: 255px;
+    margin-left: auto;
+    display: block;
+    margin-bottom: -36px;
+    z-index: 5;
+
+    &:focus {
+      background: rgba($color: $white, $alpha: 0.1);
+      box-shadow: 0 5px 5px -3px rgba($color: $black, $alpha: 0.2),0 8px 10px 1px rgba($color: $black, $alpha: 0.14),0 3px 14px 2px rgba($color: $black, $alpha: 0.12);
+    }
+
+    svg {
+      font-size: 16px;
+      margin-right: 5px;    
+      margin-top: -2px;
+    }
   }
 
   .dashboardContentRow {
@@ -60,14 +88,17 @@
       padding: 0 10px;
       width: 100%;
 
-      
-      & > h4 {
-        color: $black;
-        font-size: 20px;
-        font-weight: 800;
-        line-height: 1.33334;
-        text-align: center;
+      .TableHeading {
+        position: relative;
         margin-bottom: 14px;
+
+        h4 {
+          color: $black;
+          font-size: 20px;
+          font-weight: 800;
+          line-height: 1.8;
+          text-align: center;
+        }
       }
     }
   }
@@ -90,30 +121,135 @@
   }
 }
 
-.customForm,
-.addSatelliteForm {
-  max-width: 700px;
-  margin: 0 auto;
-  padding: 30px 10px;
+.customModal {
+  .customModalHeader {
+    padding: 24px 32px;
+    border-bottom: 0;
 
-  h4 {
-    color: $black;
-    font-size: 20px;
-    font-weight: 800;
-    line-height: 1.33334;
-    margin-bottom: 20px;
+    button {
+      width: 14px;
+      height: 14px;
+      margin: 0;
+      padding: 0;
+      box-shadow: unset !important;
+      position: absolute;
+      right: 4px;
+      text-align: center;
+      top: 4px;
+      z-index: 2;
+      margin: 9px;
+    }
 
-    @media (max-width: 767px) {
-      margin-bottom: 15px;
+    .customModalTitle {
+      color: $black;
+      font-size: 15px;
+      font-weight: 500;
+      line-height: 1.25;
     }
   }
 
+  .customModalBody {
+    padding: 0px 32px 32px;
+
+    .customForm,
+    .addSatelliteForm {
+      max-width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+  }
+
+  .stationName {
+    color: #000;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.25;
+    text-align: center;
+  }
+
+  .maintenanceId {
+    margin: 0;
+    border-radius: 2px;
+    border: 0 !important;
+    color: $white !important;
+    background: #2d72b9 !important;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 36px;
+    max-width: 100px;
+    padding: 0;
+    position: relative;
+    text-align: center;
+    text-transform: uppercase;
+    transition: box-shadow .3s var(--ease-shadow);
+    vertical-align: middle;
+    white-space: nowrap;
+    display: block;
+    box-shadow: 0 3px 1px -1px rgba(0,0,0,.08),0 1px 3px -1px rgba(0,0,0,.1);
+    margin: 10px auto 0;
+  }
+
+  .customModalFooter {
+    padding: 8px 16px 16px;
+    border-top: 0;
+
+    .dismissBtn {
+      margin: 0;
+      border-radius: 2px;
+      border: 0 !important;
+      color: #212121 !important;
+      background: $white !important;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 36px;
+      min-width: 120px;
+      padding: 0;
+      position: relative;
+      text-align: center;
+      text-transform: uppercase;
+      transition: box-shadow .3s var(--ease-shadow);
+      vertical-align: middle;
+      white-space: nowrap;
+      margin-right: 8px;
+
+      &:focus {
+        background: rgba(33, 33, 33, 0.1) !important;
+      }
+    }
+
+    .submitBtn {
+      margin: 0;
+      border-radius: 2px;
+      border: 0 !important;
+      color: $white !important;
+      background: #2d72b9 !important;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 36px;
+      min-width: 120px;
+      padding: 0;
+      position: relative;
+      text-align: center;
+      text-transform: uppercase;
+      transition: box-shadow .3s var(--ease-shadow);
+      vertical-align: middle;
+      white-space: nowrap;
+      box-shadow: 0 3px 1px -1px rgba(0,0,0,.08),0 1px 3px -1px rgba(0,0,0,.1);
+    }
+  }
+}
+.customForm,
+.addSatelliteForm {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0;
+
   .formRow {
-    margin: 0 -10px;
+    margin: 0 -8px -15px;
   }
 
   .formCol {
-    padding: 0 10px 15px;
+    padding: 0 8px 15px;
 
     @media (max-width: 767px) {
       padding-bottom: 15px;
@@ -125,7 +261,7 @@
     flex-wrap: wrap;
     flex-direction: column;
     justify-content: flex-end;
-    padding: 0 10px 20px;
+    padding: 0 8px 15px;
   
     &:last-child {
       @media (max-width: 767px) {
@@ -135,39 +271,49 @@
   }
 
   label {
-    color: #000;
-    font-size: 13px;
+    color: rgba($color: $black, $alpha: 0.5);
+    font-size: 10px;
+    line-height: 1.2;
     font-weight: 700;
-    line-height: 16px;
+    margin-bottom: 4px;
   }
   
   input,
   select {
-    color: #000;
-    font-size: 12px;
-    font-weight: 700;
-    line-height: 16px;
-    width: 100%;
-    height: 40px;
-    border-radius: 1px;
-    border: 1px solid #000 !important;
-    box-shadow: unset !important;
-    padding: 0 16px;
-  }
-  
-  button {
-    background: #000 !important;
-    color: #fff;
+    color: #212121;
     font-size: 14px;
     font-weight: 700;
     line-height: 16px;
     width: 100%;
-    height: 44px;
-    border-radius: 1px;
-    border: 1px solid #000 !important;
+    height: 30px;
+    border-radius: 0;
+    border: 0;
+    border-bottom: 1px solid #e0e0e0 !important;
     box-shadow: unset !important;
-    padding: 0 16px;
-    margin-top: 10px;
+    padding: 0;
+    background-color: transparent !important;
+    display: block;
+    line-height: 20px;
+    padding: 0 0 4px;
+  }
+  
+  button {
+    margin: 0;
+    border-radius: 1px;
+    border: 1px solid $black !important;
+    color: $white !important;
+    background: $black !important;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 28.4px;
+    min-width: 75px;
+    padding: 0 10px;
+    text-align: center;
+    text-transform: uppercase;
+    transition: 0.4s all ease;
+    margin-top: 15px;
+    margin-left: auto;
+    display: block;
 
     &.submitBtn {
       height: 40px;
@@ -176,12 +322,187 @@
   }
 }
 
+.materialInput {    
+  padding: 20px 0 0;
+  position: relative;
+
+  input {
+    font-size: 14px;
+    line-height: 1.3 !important;
+    border-bottom: 1px solid #e0e0e0 !important;
+    display: block;
+    padding: 0 0 4px;
+    width: 100%;
+    font-weight: 400;
+    height: unset;
+
+    /* Remove focus */
+    &:focus {
+      outline: none;
+      border-bottom: 1px solid rgba(0,0,0, 0);
+    }
+
+    /* active state */
+    &:focus,
+    &:valid {
+     & ~ label {
+        color: #2d72b9;
+        top: -20px;
+        transition: 0.2s ease all;
+        font-size: 14px;
+        font-size: 12px;
+        top: 4px;
+      }
+    }
+
+    &:focus {
+      & ~ .inputBar:before, 
+      & ~ .inputBar:after {
+        width: 50%;
+      }
+    }
+  }
+  
+  label {
+    bottom: 0;
+    font-size: 15px;
+    height: 20px;
+    font-weight: 400;
+    margin: 0;
+    left: 0;
+    line-height: 1;
+    overflow: hidden;
+    pointer-events: none;
+    position: absolute;
+    right: 0;
+    text-overflow: ellipsis;
+    top: 24px;
+    transition: top .2s var(--ease-md),color .2s var(--ease-md);
+    white-space: nowrap;
+    color: rgba(33, 33, 33, 0.45);
+  }
+
+  /* BOTTOM BARS ================================= */
+  .inputBar {
+    position: relative;
+    display: block;
+    width: 100%;
+    padding-top: 1px;
+
+    &::before, 
+    &::after {
+      content: '';
+      height: 2px;
+      width: 0;
+      bottom: 1px;
+      position: absolute;
+      background: #2F80ED;
+      transition: 0.2s ease all;
+    }
+
+    &::before {
+      left: 50%;
+    }
+  
+    &::after {
+      right: 50%;
+    }
+  }
+}
+
+.materialSelect {    
+  padding: 20px 0 0;
+  position: relative;
+
+  select {
+    font-size: 14px;
+    line-height: 1.3;
+    border-bottom: 1px solid #e0e0e0;
+    display: block;
+    padding: 0 0 4px;
+    width: 100%;
+    font-weight: 400;
+    height: unset;
+
+    /* Remove focus */
+    &:focus {
+      outline: none;
+      border-bottom: 1px solid rgba(0,0,0, 0);
+    }
+
+    /* active state */
+    &:focus,
+    &:valid {
+     & ~ label {
+        color: #2d72b9;
+        top: -20px;
+        transition: 0.2s ease all;
+        font-size: 14px;
+        font-size: 12px;
+        top: 4px;
+      }
+    }
+
+    &:focus {
+      & ~ .selectBar:before, 
+      & ~ .selectBar:after {
+        width: 50%;
+      }
+    }
+  }
+  
+  label {
+    bottom: 0;
+    font-size: 15px;
+    height: 20px;
+    font-weight: 400;
+    margin: 0;
+    left: 0;
+    line-height: 1;
+    overflow: hidden;
+    pointer-events: none;
+    position: absolute;
+    right: 0;
+    text-overflow: ellipsis;
+    top: 24px;
+    transition: top .2s var(--ease-md),color .2s var(--ease-md);
+    white-space: nowrap;
+    color: rgba(33, 33, 33, 0.45);
+  }
+
+  /* BOTTOM BARS ================================= */
+  .selectBar {
+    position: relative;
+    display: block;
+    width: 100%;
+    padding-top: 1px;
+
+    &::before, 
+    &::after {
+      content: '';
+      height: 2px;
+      width: 0;
+      bottom: 1px;
+      position: absolute;
+      background: #2F80ED;
+      transition: 0.2s ease all;
+    }
+
+    &::before {
+      left: 50%;
+    }
+  
+    &::after {
+      right: 50%;
+    }
+  }
+}
+
 .addSatelliteForm {
   .uploadFile {
     position: relative;
-    height: 250px;
+    height: 150px;
     border: 1px dashed #000;
-    margin-bottom: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -227,7 +548,106 @@
   }
 }
 
+.assetsDropdown {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 5;
 
+  .assetsDropdownBtn {
+    background: #ffffff;
+    border-radius: 2px;
+    box-shadow: 0 3px 1px -1px rgba(0, 0, 0, 0.08), 0 1px 3px -1px rgba(0, 0, 0, 0.1);
+    color: #212121 !important;
+    cursor: pointer;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 36px;
+    max-width: 100%;
+    position: relative;
+    text-align: center;
+    text-transform: uppercase;
+    transition: box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+    border: 0;
+    padding: 0 10px;
+    margin-left: auto;
+    display: block;
+    margin-bottom: -36px;
+    z-index: 5;
 
+    &:focus {
+      background: rgba($color: $white, $alpha: 0.1);
+      box-shadow: 0 5px 5px -3px rgba($color: $black, $alpha: 0.2),0 8px 10px 1px rgba($color: $black, $alpha: 0.14),0 3px 14px 2px rgba($color: $black, $alpha: 0.12);
+    }
 
+    svg {
+      font-size: 16px;
+      margin-right: 5px;    
+      margin-top: -2px;
+    }
+  }
 
+  .assetsDropdownMenu {
+    position: absolute !important;
+    background: transparent;
+    border-radius: 0;
+    transform: unset !important;
+    border: 0;
+    right: 0;
+    top: 38px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+    background: $white;
+    width: 100%;
+    z-index: 5;
+
+    button {
+      display: flex;
+      align-items: center;
+      padding: 8px 10px;
+      background: transparent;
+      position: relative;
+      color: $black !important;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1.25;
+      width: 100%;
+      border: 0;
+      background: transparent !important;
+      border-radius: 0;
+
+      svg {
+        color: $black;
+        font-size: 15px;
+        margin-right: 5px;
+      }
+    }
+  }
+}
+
+.graphCardWrap {
+  margin-bottom: 20px;
+
+  h6 {
+    color: rgba(33, 33, 33, 0.45);
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.5;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    padding-left: 12px;
+  }
+
+  .graphCard {
+    background: $white;
+    padding: 16px;
+    position: relative;
+    height: calc(65% - 132px);
+    margin-bottom: 48px;
+    width: 100%;
+    background: $white;
+    border-radius: 2px;
+    box-shadow: 0 3px 1px -2px rgba($color: $black, $alpha: 0.08),0 2px 2px 0  rgba($color: $black, $alpha: 0.05),0 1px 5px 0  rgba($color: $black, $alpha: 0.1);
+  }
+}

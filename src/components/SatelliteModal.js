@@ -1,21 +1,24 @@
 import React, { useState } from 'react';
-import { Modal } from 'react-bootstrap';
+import { Modal, Button } from 'react-bootstrap';
+import styles from '../styles/dashboard.module.scss'
 
 export default function SatelliteModal( props ) {
 
   return (
     <Modal
       {...props}
-    //   size="sm"
       aria-labelledby="contained-modal-title-vcenter"
       centered
-      className="customModal"
+      className={styles.customModal} 
     >
-      <Modal.Header closeButton>
+      <Modal.Header className={styles.customModalHeader} closeButton>
       </Modal.Header>
       <Modal.Body>
-        <p>Satellite name<br/> has been added!</p>
+        <p className={styles.stationName}>Ground Station {props.satelliteName}<br/> has been added!</p>
       </Modal.Body>
+      <Modal.Footer className={styles.customModalFooter}>
+        <Button type="button" className={styles.dismissBtn} onClick={props.onHide}>Dismiss</Button>
+      </Modal.Footer>
     </Modal>
   );
 }

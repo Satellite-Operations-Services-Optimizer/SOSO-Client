@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 @import 'variables';
 
 * {
@@ -9,6 +9,19 @@
 
 body html {
   scroll-behavior: smooth;
+}
+#cesiumContainer3D,#cesiumContainer2D{
+  width: 100%;
+  overflow: hidden;
+  padding: 10px;
+  background-color: white;
+}
+.viewerHeader{
+  margin-left: 10px;
+  margin-bottom: 15px;
+  width: 100%;
+  margin-top: 15px;
+  color: gray;
 }
 
 body,
@@ -76,28 +89,15 @@ input[type=number] {
   align-items: flex-start;
 
   .dashboardContent {
-    padding-left: 300px;
-    padding-top: 72px;
+    padding-left: 100px;
+    padding-top: 68px;
     width: 100%;
     min-height: 100vh;
-    // background: $lightpink;
+    background: #f2f2f2;
 
-    &.sidebar--open {
-      padding-left: 0 !important;
-    }
-
-    @media (max-width: 1199px) {
-      padding-left: 280px;
-    }
-
-    @media (max-width: 991px) {
-      padding-left: 0;
-    }
-    
-    @media (max-width: 767px) {
-      padding-left: 0;
-      padding-top: 68px;
-    }
+    // &.sidebar--open {
+    //   padding-left: 0 !important;
+    // }
 
     &.profileSettingsContent {
       &>div {
@@ -145,7 +145,6 @@ input[type=number] {
   }
 }
 
-
 .customModal {
   .modal-dialog {
       max-width: 420px;
@@ -166,6 +165,9 @@ input[type=number] {
           right: 10px;
           position: absolute;
           z-index: 2;
+          margin: 0;
+          padding: 0;
+          box-shadow: unset !important;
       }
   }
 
@@ -180,7 +182,7 @@ input[type=number] {
 
       p {
           color: #000;
-          font-size: 18px;
+          font-size: 14px;
           font-weight: 800;
           line-height: 1.33334;
           text-align: center;
@@ -190,19 +192,20 @@ input[type=number] {
           }
       }
 
-      button {
+      .newId {
         background: #000 !important;
         color: #fff;
-        font-size: 14px;
+        font-size: 12px;
         font-weight: 700;
-        line-height: 16px;
-        min-width: 120px;
-        height: 40px;
+        line-height: 30px;
+        min-width: 80px;
+        height: 32px;
         border-radius: 1px;
         border: 1px solid #000 !important;
         box-shadow: unset !important;
-        padding: 0 25px;
-        margin-top: 20px;
+        padding: 0 15px;
+        margin-top: 15px;
+        text-align: center;
       }
   }
 }
