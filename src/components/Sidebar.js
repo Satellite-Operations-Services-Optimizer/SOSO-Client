@@ -57,7 +57,7 @@ const Sidebar = () => {
                     <Link href="/schedules" className={router.pathname === '/schedules' ? styles.dropdownBtnActive : styles.dropdownBtn}><IoMdCalendar /><span>Schedules</span></Link>
                 </div>
                 <div className={styles.sidebarNavigation}>
-                    <Link href="/assetStatus" className={router.pathname === '/assetStatus' ? styles.dropdownBtnActive : styles.dropdownBtn}><MdOutlineSatelliteAlt /><span>Asset Status</span></Link>
+                    <Link href="/assetStatus" className={router.pathname === '/assetStatus' ? styles.dropdownBtnActive : styles.dropdownBtn}><MdOutlineSatelliteAlt /><span>Assets</span></Link>
                 </div>
                 <div className={styles.sidebarNavigation}>
                     <Link href="/imageOrders" className={router.pathname === '/imageOrders' ? styles.dropdownBtnActive : styles.dropdownBtn}><IoIosImages /><span>Image Orders</span></Link>
