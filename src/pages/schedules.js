@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from "react";
 import Head from 'next/head'
-import { Container, Button, Modal } from 'react-bootstrap'
+import { Container } from 'react-bootstrap'
 import Sidebar from '../components/Sidebar'
 import DashBoardHeader from '../components/DashBoardHeader'
-import DataTable from '../components/DataTable'
-import MaintenanceRequestModal from '../components/MaintenanceRequestModal'
 import styles from '../styles/dashboard.module.scss'
 import axios from "axios";
-import ScheduleGanttChart from "../components/schedule/gantt_chart"
-import ScheduleGanttChart2 from "../components/schedule/gantt_2"
+import ScheduleTimeline from "../components/schedule/timeline"
 import ScheduleTableView from "@/components/schedule/table_view";
 import { Box, Tab, Tabs, Select, InputLabel, MenuItem, FormControl } from "@mui/material";
 
@@ -36,9 +33,8 @@ export default function ScheduleView({schedules}) {
     try {
       const response = await axios.get(`http://localhost:5000/schedules/${schedules[currentScheduleName]?.id}/events`)
       let events = response.data.filter(
-        (event) => event.event_type === "imaging" || event.event_type === "maintenance" || event.event_type == "outage" || event.event_type == "contact"
+        (event) => event.event_type === "imaging" || event.event_type === "maintenance" || event.event_type == "gs_outage" || event.event_type == "sat_outage"
       )
-      console.log(events)
       setScheduledEvents(events)
     } catch {
       setScheduledEvents([])
@@ -86,7 +82,7 @@ export default function ScheduleView({schedules}) {
                 </Box>
               </Box>
               <Box sx={{ width: "100%", marginBottom: "15px" }}>
-                {tab == 0 ? <ScheduleTableView events={scheduledEvents}/> : <ScheduleGanttChart events={scheduledEvents}/>}
+                {tab == 0 ? <ScheduleTableView events={scheduledEvents}/> : <ScheduleTimeline events={scheduledEvents}/>}
               </Box>
             </Container>
           </div>
