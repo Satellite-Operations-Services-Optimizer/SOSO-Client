@@ -4,8 +4,8 @@ import moment from 'moment'
 
 const columns = [
   {
-    Header: 'Satellite ID', // replace with Satellite Name in the future (requires modifying api endpoint, cuz better to include the field there than require more queries here)
-    accessor: 'asset_id', 
+    Header: 'Satellite', // replace with Satellite Name in the future (requires modifying api endpoint, cuz better to include the field there than require more queries here)
+    accessor: 'asset_name', 
   },
   {
     Header: 'Event Type',
@@ -25,8 +25,8 @@ export default function ScheduleTableView({events}) {
     if (!events?.length) return <>No Events Scheduled</>
     events = events.map((event) => {
         event.start_time = moment(event.start_time).format("llll")
-        // duration = moment.duration(event.duration, 'seconds')
-        // event.duration = moment.utc(duration.asMilliseconds()).format("H[h]m[m]")
+        let duration = moment.duration(event.duration, 'seconds')
+        event.duration = moment.utc(duration.asMilliseconds()).format("H[h ]m[m ]s[s ]")
         return event
     })
     return <>
