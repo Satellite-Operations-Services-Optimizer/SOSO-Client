@@ -7,43 +7,48 @@ import DataTable from '../components/DataTable'
 import MaintenanceRequestModal from '../components/MaintenanceRequestModal'
 import styles from '../styles/dashboard.module.scss'
 import axios from "axios";
+import ScheduleGanttChart from "../components/schedule/gantt_chart"
+import ScheduleGanttChart2 from "../components/schedule/gantt_2"
+import ScheduleTableView from "@/components/schedule/table_view";
+import { Box, Tab, Tabs, Select, InputLabel, MenuItem, FormControl } from "@mui/material";
 
-const columns = [
-  {
-    Header: 'Dummy text',
-    accessor: 'target', 
-  },
-  {
-    Header: 'Dummy text',
-    accessor: 'activity',
-  },
-  {
-    Header: 'Dummy text',
-    accessor: 'windowStart',
-  },
-  {
-    Header: 'Dummy text',
-    accessor: 'windowEnd',
-  },
-  {
-    Header: 'Dummy text',
-    accessor: 'duration',
-  },
-  // Add more columns as needed
-];
+export async function getStaticProps() {
+  const response = await axios.get("http://localhost:5000/schedules/")
+  const data = response.data.reduce((acc, schedule_json) => {
+    acc[schedule_json['name']] = schedule_json
+    return acc
+  }, {})
+  return {
+    props: {
+      schedules: data
+    }
+  }
+}
 
-const data = [{
-  target: "Lorem apsum",
-  activity: "Lorem apsum",
-  windowStart: "Lorem apsum",
-  windowEnd: "Lorem apsum",
-  duration: "Lorem apsum",
-}];
 
-export default function Schedules() {
-  // uncomment the below line when you add link in axios
-  // const [data, setData] = useState([]);
-  
+export default function ScheduleView({schedules}) {
+  const defaultScheduleName = "Default Schedule"
+  const [tab, setTab] = useState(0);
+  const [currentScheduleName, setCurrentScheduleName] = useState(defaultScheduleName)
+  const [scheduledEvents, setScheduledEvents] = useState([])
+
+  const updateScheduledEvents = async () => {
+    try {
+      const response = await axios.get(`http://localhost:5000/schedules/${schedules[currentScheduleName]?.id}/events`)
+      let events = response.data.filter(
+        (event) => event.event_type === "imaging" || event.event_type === "maintenance" || event.event_type == "outage" || event.event_type == "contact"
+      )
+      console.log(events)
+      setScheduledEvents(events)
+    } catch {
+      setScheduledEvents([])
+    }
+  }
+
+  useEffect(() => {
+    updateScheduledEvents()
+  }, [currentScheduleName])
+
   return (
     <>
       <Head>
@@ -58,19 +63,31 @@ export default function Schedules() {
         <div className="dashboardContent">
           <div className={styles.dashboardMainContent}>
             <Container className={styles.container}>
-              <div className={styles.dashboardContentRow}>
-                <div className={styles.TableCol}>
-                  <DataTable 
-                    search = {false}
-                    tablePagination = {true}
-                    columns = {columns}
-                    data = {data}
-                    rowSeletion = {true}
-                    actionBtn= {true}
-                    actionBtnText= "Decline"
-                  />
-                </div>
-              </div>
+              <FormControl>
+                <InputLabel id="schedule-select-label">Schedule</InputLabel>
+                <Select
+                  labelId="schedule-select-label"
+                  id="schedule-select"
+                  defaultValue={defaultScheduleName}
+                  label="Schedule"
+                  onChange={(event) => setCurrentScheduleName(event.target.value)}
+                >
+                  {Object.keys(schedules).map((schedule_name, idx) => {
+                    return <MenuItem key={idx} value={schedule_name.trim()}>{schedule_name}</MenuItem>
+                  })}
+                </Select>
+              </FormControl>
+              <Box sx={{ width: "100%", marginBottom: "15px" }}>
+                <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                  <Tabs value={tab} onChange={(_, value) => setTab(value)} aria-label="Tabs">
+                    <Tab label="Table View" />
+                    <Tab label="Gantt Chart" />
+                  </Tabs>
+                </Box>
+              </Box>
+              <Box sx={{ width: "100%", marginBottom: "15px" }}>
+                {tab == 0 ? <ScheduleTableView events={scheduledEvents}/> : <ScheduleGanttChart events={scheduledEvents}/>}
+              </Box>
             </Container>
           </div>
         </div>
@@ -78,3 +95,4 @@ export default function Schedules() {
     </>
   )
 }
+

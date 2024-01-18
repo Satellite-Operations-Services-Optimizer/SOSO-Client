@@ -21,7 +21,7 @@ const DashboardHeader = () => {
                                 <div  className={styles.searchAutoComplete}>
                                     <div className={styles.searchAutoCompleteLine}>
                                         <label className={styles.searchAutoCompleteInput}>
-                                            <input className={styles.searchAutoCompleteInputElement} placeholder="Search" value="" />
+                                            <input className={styles.searchAutoCompleteInputElement} placeholder="Search" defaultValue="" />
                                     
                                         </label>
                                     </div>
