@@ -77,7 +77,7 @@ export default function ScheduleView({schedules}) {
                 <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
                   <Tabs value={tab} onChange={(_, value) => setTab(value)} aria-label="Tabs">
                     <Tab label="Table View" />
-                    <Tab label="Gantt Chart" />
+                    <Tab label="Timeline View" />
                   </Tabs>
                 </Box>
               </Box>

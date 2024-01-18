@@ -33,13 +33,14 @@ export default function ScheduleTimeline({events}) {
             end_time: end,
         })
     })
-
+    // make the timeline blue-themed with this blue: 
     return <>
         <Timeline
             groups={Object.values(groups_by_title)}
             items={items}
             defaultTimeStart={moment().add(-12, 'hour')}
             defaultTimeEnd={moment().add(12, 'hour')}
+            style={{height: "100%"}}
         />
     </>
 }
