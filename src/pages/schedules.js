@@ -10,7 +10,7 @@ import ScheduleTableView from "@/components/schedule/table_view";
 import { Box, Tab, Tabs, Select, InputLabel, MenuItem, FormControl } from "@mui/material";
 
 export async function getStaticProps() {
-  const response = await axios.get("http://localhost:5000/schedules/")
+  const response = await axios.get("http://localhost:3000/schedules/")
   const data = response.data.reduce((acc, schedule_json) => {
     acc[schedule_json['name']] = schedule_json
     return acc
@@ -31,7 +31,7 @@ export default function ScheduleView({schedules}) {
 
   const updateScheduledEvents = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/schedules/${schedules[currentScheduleName]?.id}/events`)
+      const response = await axios.get(`http://localhost:3000/schedules/${schedules[currentScheduleName]?.id}/events`)
       let events = response.data.filter(
         (event) => event.event_type === "imaging" || event.event_type === "maintenance" || event.event_type == "gs_outage" || event.event_type == "sat_outage"
       )
