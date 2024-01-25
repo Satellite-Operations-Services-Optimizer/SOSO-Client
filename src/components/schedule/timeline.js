@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import Timeline from 'react-calendar-timeline'
+import Timeline, { TimelineHeaders, TimelineMarkers, TodayMarker } from 'react-calendar-timeline'
 import 'react-calendar-timeline/lib/Timeline.css';
 import moment, { max } from "moment";
 
@@ -33,15 +33,18 @@ export default function ScheduleTimeline({events}) {
             end_time: end,
         })
     })
-    // make the timeline blue-themed with this blue: 
+    // make the timeline blue-themed with this blue: #2d72b9
     return <>
         <Timeline
             groups={Object.values(groups_by_title)}
             items={items}
             defaultTimeStart={moment().add(-12, 'hour')}
             defaultTimeEnd={moment().add(12, 'hour')}
-            style={{height: "100%"}}
-        />
+        >
+            <TimelineMarkers>
+                <TodayMarker />
+            </TimelineMarkers>
+        </Timeline>
     </>
 }
 
