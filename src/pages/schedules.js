@@ -45,6 +45,8 @@ export default function ScheduleView({schedules}) {
     updateScheduledEvents()
   }, [currentScheduleName])
 
+  const [timeConstraint, setTimeConstraint] = useState(1);
+  
   return (
     <>
       <Head>
@@ -68,9 +70,23 @@ export default function ScheduleView({schedules}) {
                   label="Schedule"
                   onChange={(event) => setCurrentScheduleName(event.target.value)}
                 >
-                  {Object.keys(schedules).map((schedule_name, idx) => {
-                    return <MenuItem key={idx} value={schedule_name.trim()}>{schedule_name}</MenuItem>
-                  })}
+                  {Object.keys(schedules).map((schedule_name, idx) => (
+                    <MenuItem key={idx} value={schedule_name.trim()}>{schedule_name}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <FormControl>
+                <InputLabel id="time-constraint-label">Time Constraint</InputLabel>
+                <Select
+                  labelId="time-constraint-label"
+                  id="time-constraint-select"
+                  value={timeConstraint}
+                  label="Time Constraint"
+                  onChange={(event) => setTimeConstraint(event.target.value)}
+                >
+                  {[...Array(60).keys()].map((value) => (
+                    <MenuItem key={value} value={value + 1}>{value + 1} minute(s)</MenuItem>
+                  ))}
                 </Select>
               </FormControl>
               <Box sx={{ width: "100%", marginBottom: "15px" }}>
@@ -82,13 +98,12 @@ export default function ScheduleView({schedules}) {
                 </Box>
               </Box>
               <Box sx={{ width: "100%", marginBottom: "15px" }}>
-                {tab == 0 ? <ScheduleTableView events={scheduledEvents}/> : <ScheduleTimeline events={scheduledEvents}/>}
+                {tab === 0 ? <ScheduleTableView events={scheduledEvents}/> : <ScheduleTimeline events={scheduledEvents}/>}
               </Box>
             </Container>
           </div>
         </div>
       </main>
     </>
-  )
+  );
 }
-
