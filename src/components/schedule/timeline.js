@@ -6,6 +6,15 @@ import { ButtonGroup, Button, IconButton } from "@mui/material";
 import { MyLocation } from '@mui/icons-material'
 import moment from "moment";
 
+let eventColors = {
+  "eclipse": "grey",
+  "contact": "green",
+  "observation": "blue",
+  "imaging": "orange",
+  "maintenance": "purple",
+  "gs_outage": "red",
+  "sat_outage": "red"
+}
 
 export default function ScheduleTimeline({events}) {
     if (!events?.length) return <>No Events Scheduled</>
@@ -86,14 +95,17 @@ function parse_events(events) {
         }
 
         let duration = moment.duration(event.duration, 'seconds')
+        
         items.push({
             id: event_id,
             group: groups_by_title[group_title].id,
             content: event["event_type"],
             start,
             end,
+            style: `background-color: ${eventColors[event["event_type"]]};`,
             title: renderToString(<>
                 <div>Type: {event["event_type"]}</div>
+                {event["groundstation_id"] && <div>Ground station: {event["groundstation_id"]}</div>}
                 <div>Start time: {moment(event["start_time"]).format("llll")}</div>
                 <div>Duration: {moment.utc(duration.asMilliseconds()).format("H[h ]m[m ]s[s ]")}</div>
             </>)

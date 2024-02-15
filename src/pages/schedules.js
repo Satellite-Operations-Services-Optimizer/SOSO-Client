@@ -6,7 +6,7 @@ import DashBoardHeader from '../components/DashBoardHeader'
 import styles from '../styles/dashboard.module.scss'
 import axios from "axios";
 import ScheduleTimeline from "../components/schedule/timeline"
-import ScheduleTableView from "@/components/schedule/table_view";
+import ScheduleTableView from "@/components/schedule/tableView";
 import { Box, Tab, Tabs, Select, InputLabel, MenuItem, FormControl } from "@mui/material";
 
 export async function getStaticProps() {
@@ -22,6 +22,7 @@ export async function getStaticProps() {
   }
 }
 
+let displayed_event_types = ["eclipse", "contact", "observation"] // "imaging", "maintenance", "gs_outage", "sat_outage"
 
 export default function ScheduleView({schedules}) {
   const defaultScheduleName = "Default Schedule"
@@ -33,7 +34,7 @@ export default function ScheduleView({schedules}) {
     try {
       const response = await axios.get(`http://localhost:5000/schedules/${schedules[currentScheduleName]?.id}/events`)
       let events = response.data.filter(
-        (event) => event.event_type === "imaging" || event.event_type === "maintenance" || event.event_type == "gs_outage" || event.event_type == "sat_outage"
+        (event) => event.event_type==="eclipse" || event.event_type=="contact" || event.event_type=="observation"//event.event_type === "imaging" || event.event_type === "maintenance" || event.event_type == "gs_outage" || event.event_type == "sat_outage"
       )
       setScheduledEvents(events)
     } catch {
