@@ -24,24 +24,26 @@ const columns = [
 export default function ScheduleTableView({events}) {
     if (!events?.length) return <>No Events Scheduled</>
     events = events.map((event) => {
-        event.start_time = moment(event.start_time).format("llll")
         let duration = moment.duration(event.duration, 'seconds')
-        event.duration = moment.utc(duration.asMilliseconds()).format("H[h ]m[m ]s[s ]")
-        return event
+        return {
+          ...event,
+          start_time: moment(event.start_time).format("llll"),
+          duration: moment.utc(duration.asMilliseconds()).format("H[h ]m[m ]s[s ]")
+        }
     })
     return <>
         <div className={styles.dashboardContentRow}>
-        <div className={styles.TableCol}>
-            <DataTable
-                search={false}
-                tablePagination={true}
-                columns={columns}
-                data={events}
-                rowSeletion={true}
-                actionBtn={true}
-                actionBtnText="Decline"
-            />
-        </div>
+          <div className={styles.TableCol}>
+              <DataTable
+                  search={false}
+                  tablePagination={true}
+                  columns={columns}
+                  data={events}
+                  rowSeletion={true}
+                  actionBtn={true}
+                  actionBtnText="Decline"
+              />
+          </div>
         </div>
     </>
 }
