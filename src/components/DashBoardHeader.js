@@ -11,6 +11,9 @@ const DashboardHeader = () => {
                 <div className={styles.dHeaderContent}>
                     {router.pathname === '/' ? "" :
                     <div className={styles.mainSearch}>
+                          <div>
+                            <img className={styles.logo} src={"images/logo.png"} alt="Logo" />
+                            </div>
                         <div className={styles.searchBar}>
                             <div className={styles.searchBoxWithIcon}>
                                 <div className={styles.searchBoxIcon}>

@@ -46,6 +46,13 @@
     height: 36px;
     position: relative;
     z-index: 5;
+    display: flex;
+
+    .logo {
+        height: 100%;
+        margin-right: 20px; 
+    }
+
 
     .searchBar {
         background-color: var(--card-primary);
@@ -56,6 +63,7 @@
         transition: box-shadow .3s cubic-bezier(.215,.61,.355,1);
         transition: box-shadow .3s cubic-bezier(0.215,0.610,0.355,1.000);
         z-index: 10;
+        flex-grow: 1;
 
         .searchBoxWithIcon {
             padding-right: 60px;
