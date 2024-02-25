@@ -18,12 +18,7 @@ import Viewer2D from "@/components/Map/Viewer2D/Viewer2D";
 import Viewer3D from "@/components/Map/Viewer3D/Viewer3D";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 
-const port = 4000;
-const WS_URL1 = "ws://localhost:" + port + "/assets/satellites/1/state";
-const WS_URL2 = "ws://localhost:" + port + "/assets/satellites/2/state";
-const WS_URL3 = "ws://localhost:" + port + "/assets/satellites/3/state";
-const WS_URL4 = "ws://localhost:" + port + "/assets/satellites/4/state";
-const WS_URL5 = "ws://localhost:" + port + "/assets/satellites/5/state";
+const WS_URL = "ws://localhost:5000/assets/satellites/1/state";
 
 const columns = [
   {
@@ -108,41 +103,17 @@ const data2 = [
 ];
 
 export default function AssetStatus() {
-  const { sendMessage1, lastMessage1, readyState1 } = useWebSocket(WS_URL1);
-  const { sendMessage2, lastMessage2, readyState2 } = useWebSocket(WS_URL2);
-  const { sendMessage3, lastMessage3, readyState3 } = useWebSocket(WS_URL3);
-  const { sendMessage4, lastMessage4, readyState4 } = useWebSocket(WS_URL4);
-  const { sendMessage5, lastMessage5, readyState5 } = useWebSocket(WS_URL5);
+  const { sendMessage, lastMessage, readyState } = useWebSocket(WS_URL);
 
-  const [satellite1, setSatellite1] = useState(null);
-  const [satellite2, setSatellite2] = useState(null);
-  const [satellite3, setSatellite3] = useState(null);
-  const [satellite4, setSatellite4] = useState(null);
-  const [satellite5, setSatellite5] = useState(null);
+  const [satellite, setSatellite] = useState(null);
 
-  useEffect(() => {
-    setSatellite1(lastMessage1 == null ? null : lastMessage1.data);
-    setSatellite2(lastMessage2 == null ? null : lastMessage2.data);
-    setSatellite3(lastMessage3 == null ? null : lastMessage3.data);
-    setSatellite4(lastMessage4 == null ? null : lastMessage4.data);
-    setSatellite5(lastMessage5 == null ? null : lastMessage5.data);
-  }, [lastMessage1, lastMessage2, lastMessage3, lastMessage4, lastMessage5]);
-
-  useEffect(() => {
-    console.log("Satellite Data 1: " + satellite1);
-    console.log("Satellite Data 2: " + satellite2);
-    console.log("Satellite Data 3: " + satellite3);
-    console.log("Satellite Data 4: " + satellite4);
-    console.log("Satellite Data 5: " + satellite5);
-  }, [satellite1, satellite2, satellite3, satellite4, satellite5]);
-
-  useEffect(() => {
-    console.log("Connection status 1: " + readyState1);
-    console.log("Connection status 2: " + readyState2);
-    console.log("Connection status 3: " + readyState3);
-    console.log("Connection status 4: " + readyState4);
-    console.log("Connection status 5: " + readyState5);
-  }, [readyState1, readyState2, readyState3, readyState4, readyState5]);
+  const connectionStatus = {
+    [ReadyState.CONNECTING]: "Connecting",
+    [ReadyState.OPEN]: "Open",
+    [ReadyState.CLOSING]: "Closing",
+    [ReadyState.CLOSED]: "Closed",
+    [ReadyState.UNINSTANTIATED]: "Uninstantiated",
+  }[readyState];
 
   // uncomment the below line when you add link in axios
   // const [data, setData] = useState([]);
@@ -158,6 +129,17 @@ export default function AssetStatus() {
     if (newValue == 0) {
     }
   };
+
+  useEffect(() => {
+    console.log("Current connection status: " + connectionStatus);
+    console.log(
+      "Data: " + (lastMessage == null ? "no data" : lastMessage.data)
+    );
+  }, [readyState, lastMessage]);
+
+  useEffect(() => {
+    setSatellite(lastMessage == null ? null : lastMessage.data);
+  }, [lastMessage]);
 
   useEffect(() => {
     // just change the url and uncomment the inner code
@@ -200,6 +182,9 @@ export default function AssetStatus() {
                 <div className={styles.dashboardContentRow}>
                   <div className={styles.TableCol}>
                     <div className={styles.TableHeading}>
+                      <h4>{currentTime.toLocaleString()}</h4>
+                      <h1>Hello {connectionStatus}</h1>
+                      <p>Satellite 1: {satellite}</p>
                       <div className={styles.assetsDropdown}>
                         <Button
                           type="button"
