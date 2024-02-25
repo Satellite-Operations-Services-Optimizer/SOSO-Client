@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useState, useEffect } from "react";
 import Head from "next/head";
 import { Container, Button } from "react-bootstrap";
@@ -16,9 +14,6 @@ import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import Viewer2D from "@/components/Map/Viewer2D/Viewer2D";
 import Viewer3D from "@/components/Map/Viewer3D/Viewer3D";
-import useWebSocket, { ReadyState } from "react-use-websocket";
-
-const WS_URL = "ws://localhost:5000/assets/satellites/1/state";
 
 const columns = [
   {
@@ -103,18 +98,6 @@ const data2 = [
 ];
 
 export default function AssetStatus() {
-  const { sendMessage, lastMessage, readyState } = useWebSocket(WS_URL);
-
-  const [satellite, setSatellite] = useState(null);
-
-  const connectionStatus = {
-    [ReadyState.CONNECTING]: "Connecting",
-    [ReadyState.OPEN]: "Open",
-    [ReadyState.CLOSING]: "Closing",
-    [ReadyState.CLOSED]: "Closed",
-    [ReadyState.UNINSTANTIATED]: "Uninstantiated",
-  }[readyState];
-
   // uncomment the below line when you add link in axios
   // const [data, setData] = useState([]);
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -129,17 +112,6 @@ export default function AssetStatus() {
     if (newValue == 0) {
     }
   };
-
-  useEffect(() => {
-    console.log("Current connection status: " + connectionStatus);
-    console.log(
-      "Data: " + (lastMessage == null ? "no data" : lastMessage.data)
-    );
-  }, [readyState, lastMessage]);
-
-  useEffect(() => {
-    setSatellite(lastMessage == null ? null : lastMessage.data);
-  }, [lastMessage]);
 
   useEffect(() => {
     // just change the url and uncomment the inner code
@@ -183,8 +155,6 @@ export default function AssetStatus() {
                   <div className={styles.TableCol}>
                     <div className={styles.TableHeading}>
                       <h4>{currentTime.toLocaleString()}</h4>
-                      <h1>Hello {connectionStatus}</h1>
-                      <p>Satellite 1: {satellite}</p>
                       <div className={styles.assetsDropdown}>
                         <Button
                           type="button"
