@@ -8,9 +8,10 @@ import axios from "axios";
 import ScheduleTimeline from "../components/schedule/timeline"
 import ScheduleTableView from "@/components/schedule/tableView";
 import { Box, Tab, Tabs, Select, InputLabel, MenuItem, FormControl } from "@mui/material";
+import API_ENDPOINT from "@/components/constants";
 
 export async function getStaticProps() {
-  const response = await axios.get("http://localhost:5000/schedules/")
+  const response = await axios.get(`${API_ENDPOINT}/schedules/`)
   const data = response.data.reduce((acc, schedule_json) => {
     acc[schedule_json['name']] = schedule_json
     return acc
@@ -32,7 +33,7 @@ export default function ScheduleView({schedules}) {
 
   const updateScheduledEvents = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/schedules/${schedules[currentScheduleName]?.id}/events`)
+      const response = await axios.get(`${API_ENDPOINT}/schedules/${schedules[currentScheduleName]?.id}/events`)
       let events = response.data.filter(
         (event) => event.event_type==="eclipse" || event.event_type=="contact" || event.event_type=="observation"//event.event_type === "imaging" || event.event_type === "maintenance" || event.event_type == "gs_outage" || event.event_type == "sat_outage"
       )
