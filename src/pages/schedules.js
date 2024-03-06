@@ -8,43 +8,49 @@ import axios from "axios";
 import ScheduleTimeline from "../components/schedule/timeline"
 import ScheduleTableView from "@/components/schedule/tableView";
 import { Box, Tab, Tabs, Select, InputLabel, MenuItem, FormControl } from "@mui/material";
-import API_ENDPOINT from "@/components/constants";
+import { API_ENDPOINT } from "@/components/constants";
 
 export async function getStaticProps() {
   const response = await axios.get(`${API_ENDPOINT}/schedules/`)
+  console.log(`${API_ENDPOINT}/schedules/`)
   const data = response.data.reduce((acc, schedule_json) => {
     acc[schedule_json['name']] = schedule_json
     return acc
   }, {})
   return {
     props: {
-      schedules: data
+      schedules: data,
+      endpoint: API_ENDPOINT
     }
   }
 }
 
-let displayed_event_types = ["eclipse", "contact", "observation"] // "imaging", "maintenance", "gs_outage", "sat_outage"
+let displayed_event_types = ["eclipse", "contact", "capture", "imaging"]//, "maintenance", "gs_outage", "sat_outage"
 
-export default function ScheduleView({schedules}) {
+export default function ScheduleView({schedules, endpoint}) {
   const defaultScheduleName = "Default Schedule"
   const [tab, setTab] = useState(0);
   const [currentScheduleName, setCurrentScheduleName] = useState(defaultScheduleName)
   const [scheduledEvents, setScheduledEvents] = useState([])
 
-  const updateScheduledEvents = async () => {
+  const updateScheduledEvents = async (currentScheduleName, scheduleInfos) => {
     try {
-      const response = await axios.get(`${API_ENDPOINT}/schedules/${schedules[currentScheduleName]?.id}/events`)
-      let events = response.data.filter(
-        (event) => event.event_type==="eclipse" || event.event_type=="contact" || event.event_type=="observation"//event.event_type === "imaging" || event.event_type === "maintenance" || event.event_type == "gs_outage" || event.event_type == "sat_outage"
-      )
-      setScheduledEvents(events)
-    } catch {
+      let event_types_filter = ""
+      if (displayed_event_types.length > 0) {
+        event_types_filter = '?event_types=' + displayed_event_types.join('&event_types=')
+      }
+      
+      let url = `${endpoint}/schedules/${scheduleInfos[currentScheduleName]?.id}/events${event_types_filter}`
+      const response = await axios.get(url)
+      setScheduledEvents(response.data)
+    } catch (error) {
       setScheduledEvents([])
+      throw error;
     }
   }
 
   useEffect(() => {
-    updateScheduledEvents()
+    updateScheduledEvents(currentScheduleName, schedules)
   }, [currentScheduleName])
 
   const [timeConstraint, setTimeConstraint] = useState(1);
