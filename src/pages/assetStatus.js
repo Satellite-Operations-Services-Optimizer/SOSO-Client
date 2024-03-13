@@ -175,7 +175,7 @@ export default function AssetStatus() {
   const [satellite5, setSatellite5] = useState(null);
 
   useEffect(() => {
-    setSatellite1(lastMessage2 == null ? satellite2 : lastMessage2.data);
+    setSatellite1(lastMessage2 == null ? satellite1 : lastMessage2.data);
     setSatellite2(lastMessage2 == null ? satellite2 : lastMessage2.data);
     setSatellite3(lastMessage3 == null ? satellite3 : lastMessage3.data);
     setSatellite4(lastMessage4 == null ? satellite4 : lastMessage4.data);
