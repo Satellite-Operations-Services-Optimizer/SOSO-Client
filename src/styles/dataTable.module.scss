@@ -359,8 +359,7 @@
     }
 }
 
-.tablePagination,
-.tablePaginationBtn {
+.tablePagination {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -508,6 +507,10 @@
     }
 }
 
-.tablePaginationBtn {
+.tablePaginationMaintenanceBtn {
     margin-right: 265px;
+}
+
+.tablePaginationOutageRequestsBtn {
+    margin-right: 145px;
 }

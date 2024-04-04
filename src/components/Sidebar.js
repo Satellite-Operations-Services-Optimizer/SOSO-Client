@@ -9,6 +9,7 @@ import { BiSolidMemoryCard } from 'react-icons/bi';
 import { ImWrench } from "react-icons/im";
 import { LuOrbit } from "react-icons/lu";
 import { GrDocumentUpdate } from "react-icons/gr";
+import { MdAppsOutage } from "react-icons/md";
 import Link from 'next/link';
 
 const Sidebar = () => {
@@ -61,6 +62,9 @@ const Sidebar = () => {
                 </div>
                 <div className={styles.sidebarNavigation}>
                     <Link href="/imageOrders" className={router.pathname === '/imageOrders' ? styles.dropdownBtnActive : styles.dropdownBtn}><IoIosImages /><span>Image Orders</span></Link>
+                </div>
+                <div className={styles.sidebarNavigation}>
+                    <Link href="/outageRequests" className={router.pathname === '/outageRequests' ? styles.dropdownBtnActive : styles.dropdownBtn}><MdAppsOutage /><span>Outage Requests</span></Link>
                 </div>
             </div>
         </div>

@@ -52,6 +52,41 @@
     }
   }
 
+  .outageRequestsBtn {
+    background: $white;
+    border-radius: 2px;
+    box-shadow: 0 3px 1px -1px rgba($color: $black, $alpha: 0.08),0 1px 3px -1px rgba($color: $black, $alpha: 0.1);
+    color: #212121 !important;
+    cursor: pointer;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 36px;
+    max-width: 100%;
+    position: relative;
+    text-align: center;
+    text-transform: uppercase;
+    transition: box-shadow .3s cubic-bezier(0.4,0,0.2,1);
+    white-space: nowrap;
+    border: 0;
+    padding: 0 15px;
+    margin-left: auto;
+    display: block;
+    margin-bottom: -36px;
+    z-index: 5;
+
+    &:focus {
+      background: rgba($color: $white, $alpha: 0.1);
+      box-shadow: 0 5px 5px -3px rgba($color: $black, $alpha: 0.2),0 8px 10px 1px rgba($color: $black, $alpha: 0.14),0 3px 14px 2px rgba($color: $black, $alpha: 0.12);
+    }
+
+    svg {
+      font-size: 16px;
+      margin-right: 5px;    
+      margin-top: -2px;
+    }
+  }
+
   .dashboardContentRow {
     display: flex;
     flex-wrap: wrap;
@@ -90,6 +125,7 @@
 
       .TableHeading {
         position: relative;
+        min-height: 36px;
         margin-bottom: 14px;
 
         h4 {
@@ -649,5 +685,104 @@
     background: $white;
     border-radius: 2px;
     box-shadow: 0 3px 1px -2px rgba($color: $black, $alpha: 0.08),0 2px 2px 0  rgba($color: $black, $alpha: 0.05),0 1px 5px 0  rgba($color: $black, $alpha: 0.1);
+  }
+}
+
+.systemTimeWrap {
+  max-width: 650px;
+  margin: 0 auto;
+  background: $white;
+  padding: 32px 32px;
+  border-radius: 8px;
+
+  h4 {
+    color: #000;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.25;
+    margin-bottom: 12px;
+
+    &::after {
+      content: "";
+      background: #000;
+      left: -10px;
+      top: 0;
+      height: 100%;
+      width: 3px;
+      position: absolute;
+      border-radius: 3px;
+    }
+  }
+
+  .systemTime {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+
+    h6 {
+      color: rgba(33, 33, 33, 0.6);
+      font-size: 15px;
+      font-weight: 400;
+      line-height: 1.25;
+      width: 50%;
+    }
+
+    p {
+      color: #1976d2;
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.25;
+      width: 50%;
+    }
+  }
+
+  .customForm {
+
+    .formGroup {
+      padding: 0;
+      margin-bottom: 20px;
+
+      label {
+        font-size: 12px;
+        line-height: 16px;
+        font-weight: 400;
+        margin-bottom: 4px;
+        color: #2d72b9;
+      }
+
+      input {
+        font-size: 14px;
+        line-height: 1.3 !important;
+        border-bottom: 1px solid #e0e0e0 !important;
+        display: block;
+        padding: 0 0 4px;
+        width: 100%;
+        font-weight: 400;
+        height: unset;
+      }
+    }
+
+    button {
+      margin: 0;
+      border-radius: 2px;
+      border: 0 !important;
+      color: #ffffff !important;
+      background: #2d72b9 !important;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 36px;
+      max-width: 120px;
+      width: 100%;
+      padding: 0;
+      position: relative;
+      text-align: center;
+      text-transform: uppercase;
+      transition: box-shadow 0.3s var(--ease-shadow);
+      vertical-align: middle;
+      white-space: nowrap;
+      box-shadow: 0 3px 1px -1px rgba(0, 0, 0, 0.08), 0 1px 3px -1px rgba(0, 0, 0, 0.1);
+      display: block;
+      margin-left: auto;
+    }
   }
 }
