@@ -9,6 +9,8 @@ import "react-circular-progressbar/dist/styles.css";
 import DataTable from "@/components/DataTable";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { PieChart } from "@mui/x-charts/PieChart";
+import axios from "axios";
+import { API_ENDPOINT } from "@/components/constants";
 
 export default function Home() {
   // uncomment the below line when you add link in axios
@@ -36,14 +38,6 @@ export default function Home() {
     { order: "Order 4", status: "true" },
   ];
 
-  const mockUtilizationData = [
-    { satellite: "SAT1", usage: 30 },
-    { satellite: "SAT2", usage: 15 },
-    { satellite: "SAT3", usage: 37 },
-    { satellite: "SAT4", usage: 5 },
-    { satellite: "SAT4", usage: 80 },
-  ];
-
   const pieChartData = [
     { id: 0, value: 3, label: "SAT1" },
     { id: 1, value: 15, label: "SAT2" },
@@ -51,26 +45,56 @@ export default function Home() {
     { id: 3, value: 20, label: "SAT4" },
     { id: 4, value: 40, label: "SAT5" },
   ];
-  const data = {
-    labels: mockUtilizationData.map((data) => {
-      return data.satellite;
-    }),
-    datasets: [
-      {
-        label: "My First dataset",
-        backgroundColor: "rgb(255, 99, 132)",
-        borderColor: "rgb(255, 99, 132)",
-        data: mockUtilizationData.map((data) => {
-          return data.usage;
-        }),
-      },
-    ],
-  };
 
   const [ordersFulfilled, setOrdersFulfilled] = useState(null);
 
   useEffect(() => {
     setOrdersFulfilled(orderStatuses());
+  }, []);
+
+  const satelliteURL = API_ENDPOINT + "/assets/satellites";
+
+  const [satellites, setSatellites] = useState(null);
+  const [satellitesPower, setSatellitesPower] = useState(null);
+  const [satellitesStorage, setSatellitesStorage] = useState(null);
+
+  useEffect(() => {
+    if (satellites !== null) {
+      console.log(
+        "Satellite Power: ",
+        satellites.map((sat) => {
+          return { satellite: sat.name, usage: sat.power_capacity };
+        })
+      );
+      console.log(
+        "Satellite Storage: ",
+        satellites.map((sat) => {
+          return { satellite: sat.name, storage: sat.storage_capacity };
+        })
+      );
+      setSatellitesPower(
+        satellites.map((sat) => {
+          return { satellite: sat.name, usage: sat.power_capacity };
+        })
+      );
+      setSatellitesStorage(
+        satellites.map((sat) => {
+          return { satellite: sat.name, storage: sat.storage_capacity };
+        })
+      );
+    }
+  }, [satellites]);
+
+  useEffect(() => {
+    axios
+      .get(satelliteURL)
+      .then((response) => {
+        console.log(response.data);
+        setSatellites(response.data);
+      })
+      .catch((err) => {
+        console.log("Satellite Endpoint error: " + JSON(err));
+      });
   }, []);
 
   return (
@@ -117,26 +141,28 @@ export default function Home() {
                 <Stack className="align-items-center">
                   <h6>Asset Power Bar Chart</h6>
                   <div>
-                    <BarChart
-                      dataset={mockUtilizationData}
-                      yAxis={[{ scaleType: "band", dataKey: "satellite" }]}
-                      series={[
-                        {
-                          dataKey: "usage",
-                          label: "Usage",
-                        },
-                      ]}
-                      layout="horizontal"
-                      {...{
-                        xAxis: [
+                    {satellitesPower !== null && (
+                      <BarChart
+                        dataset={satellitesPower}
+                        yAxis={[{ scaleType: "band", dataKey: "satellite" }]}
+                        series={[
                           {
-                            label: "Power Usage",
+                            dataKey: "usage",
+                            label: "Usage",
                           },
-                        ],
-                        width: "500",
-                        height: "500",
-                      }}
-                    />
+                        ]}
+                        layout="horizontal"
+                        {...{
+                          xAxis: [
+                            {
+                              label: "Power Capacity",
+                            },
+                          ],
+                          width: "500",
+                          height: "500",
+                        }}
+                      />
+                    )}
                   </div>
                 </Stack>
               </Col>
@@ -171,26 +197,28 @@ export default function Home() {
                 <Stack className="align-items-center">
                   <h6>Asset Storage Bar Chart</h6>
                   <div>
-                    <BarChart
-                      dataset={mockUtilizationData}
-                      yAxis={[{ scaleType: "band", dataKey: "satellite" }]}
-                      series={[
-                        {
-                          dataKey: "usage",
-                          label: "Usage",
-                        },
-                      ]}
-                      layout="horizontal"
-                      {...{
-                        xAxis: [
+                    {satellitesStorage !== null && (
+                      <BarChart
+                        dataset={satellitesStorage}
+                        yAxis={[{ scaleType: "band", dataKey: "satellite" }]}
+                        series={[
                           {
+                            dataKey: "storage",
                             label: "Storage",
                           },
-                        ],
-                        width: "500",
-                        height: "500",
-                      }}
-                    />
+                        ]}
+                        layout="horizontal"
+                        {...{
+                          xAxis: [
+                            {
+                              label: "Storage",
+                            },
+                          ],
+                          width: "500",
+                          height: "500",
+                        }}
+                      />
+                    )}
                   </div>
                 </Stack>
               </Col>
