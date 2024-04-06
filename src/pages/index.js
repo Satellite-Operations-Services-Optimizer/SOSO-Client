@@ -112,25 +112,34 @@ export default function Home() {
           <br />
           <br />
           <Container>
-            <Row>
+            <Row style={{ height: "100%" }}>
               <Col lg={6}>
-                <div>
-                  <br />
-                  <Stack className="align-items-center">
-                    <div
-                      style={{ width: "25%", height: "25%", textSize: "15px" }}
-                    >
-                      <CircularProgressbar
-                        value={percentage}
-                        text={`${percentage}%`}
-                      />
-                    </div>
-                  </Stack>
+                <Row style={{ height: "50%" }}>
                   <div>
                     <br />
-                    <h5 className="text-center">
+                    <Stack className="align-items-center">
+                      <div
+                        style={{
+                          width: "35%",
+                          height: "35%",
+                          textSize: "15px",
+                        }}
+                      >
+                        <CircularProgressbar
+                          value={percentage}
+                          text={`${percentage}%`}
+                        />
+                      </div>
+                    </Stack>
+                  </div>
+                </Row>
+                <br />
+                <Row style={{ height: "50%" }}>
+                  <div>
+                    <br />
+                    {/* <h5 className="text-center">
                       Satellite Orders and their statuses
-                    </h5>
+                    </h5> */}
                     <DataTable
                       search={false}
                       tablePagination={true}
@@ -140,13 +149,13 @@ export default function Home() {
                       data={ordersFulfilledMockData}
                     />
                   </div>
-                </div>
+                </Row>
               </Col>
               <Col>
-                <Row>
+                <Row style={{ height: "50%" }}>
                   <div>
                     <Stack className="align-items-center">
-                      <h6>Asset Power</h6>
+                      {/* <h6>Asset Power</h6> */}
                       <div>
                         {satellitesPower !== null && (
                           <BarChart
@@ -158,6 +167,7 @@ export default function Home() {
                               {
                                 dataKey: "usage",
                                 label: "Usage",
+                                color: "#76b7b2",
                               },
                             ]}
                             layout="horizontal"
@@ -167,8 +177,8 @@ export default function Home() {
                                   label: "Power Capacity",
                                 },
                               ],
-                              width: "250",
-                              height: "250",
+                              width: "270",
+                              height: "270",
                             }}
                           />
                         )}
@@ -176,12 +186,11 @@ export default function Home() {
                     </Stack>
                   </div>
                 </Row>
-                <hr />
-
-                <Row>
+                <br />
+                <Row style={{ height: "50%" }}>
                   <div>
                     <Stack className="align-items-center">
-                      <h6>Asset Storage</h6>
+                      {/* <h6>Asset Storage</h6> */}
                       <div>
                         {satellitesStorage !== null && (
                           <BarChart
@@ -193,6 +202,7 @@ export default function Home() {
                               {
                                 dataKey: "storage",
                                 label: "Storage",
+                                color: "#4e79a7",
                               },
                             ]}
                             layout="horizontal"
@@ -202,8 +212,8 @@ export default function Home() {
                                   label: "Storage",
                                 },
                               ],
-                              width: "250",
-                              height: "250",
+                              width: "270",
+                              height: "270",
                             }}
                           />
                         )}
