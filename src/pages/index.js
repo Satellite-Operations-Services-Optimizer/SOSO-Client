@@ -109,126 +109,154 @@ export default function Home() {
         <Sidebar />
         <DashBoardHeader />
         <div className="dashboardContent">
+          <br />
+          <br />
           <Container>
+            <Row>
+              <Col lg={6}>
+                <div>
+                  <br />
+                  <Stack className="align-items-center">
+                    <div
+                      style={{ width: "25%", height: "25%", textSize: "15px" }}
+                    >
+                      <CircularProgressbar
+                        value={percentage}
+                        text={`${percentage}%`}
+                      />
+                    </div>
+                  </Stack>
+                  <div>
+                    <br />
+                    <h5 className="text-center">
+                      Satellite Orders and their statuses
+                    </h5>
+                    <DataTable
+                      search={false}
+                      tablePagination={true}
+                      actionBtn={true}
+                      rowSeletion={false}
+                      columns={ordersFulfilledColumnHeaders}
+                      data={ordersFulfilledMockData}
+                    />
+                  </div>
+                </div>
+              </Col>
+              <Col>
+                <Row>
+                  <div>
+                    <Stack className="align-items-center">
+                      <h6>Asset Power</h6>
+                      <div>
+                        {satellitesPower !== null && (
+                          <BarChart
+                            dataset={satellitesPower}
+                            yAxis={[
+                              { scaleType: "band", dataKey: "satellite" },
+                            ]}
+                            series={[
+                              {
+                                dataKey: "usage",
+                                label: "Usage",
+                              },
+                            ]}
+                            layout="horizontal"
+                            {...{
+                              xAxis: [
+                                {
+                                  label: "Power Capacity",
+                                },
+                              ],
+                              width: "250",
+                              height: "250",
+                            }}
+                          />
+                        )}
+                      </div>
+                    </Stack>
+                  </div>
+                </Row>
+                <hr />
+
+                <Row>
+                  <div>
+                    <Stack className="align-items-center">
+                      <h6>Asset Storage</h6>
+                      <div>
+                        {satellitesStorage !== null && (
+                          <BarChart
+                            dataset={satellitesStorage}
+                            yAxis={[
+                              { scaleType: "band", dataKey: "satellite" },
+                            ]}
+                            series={[
+                              {
+                                dataKey: "storage",
+                                label: "Storage",
+                              },
+                            ]}
+                            layout="horizontal"
+                            {...{
+                              xAxis: [
+                                {
+                                  label: "Storage",
+                                },
+                              ],
+                              width: "250",
+                              height: "250",
+                            }}
+                          />
+                        )}
+                      </div>
+                    </Stack>
+                  </div>
+                </Row>
+              </Col>
+            </Row>
             <br />
-            <Stack className="align-items-center">
-              <div style={{ width: "25%", height: "25%", textSize: "15px" }}>
-                <CircularProgressbar
-                  value={percentage}
-                  text={`${percentage}%`}
-                />
-              </div>
-            </Stack>
-            <div>
-              <br />
-              <h5 className="text-center">
-                Satellite Orders and their statuses
-              </h5>
-              <DataTable
-                search={false}
-                tablePagination={true}
-                actionBtn={true}
-                rowSeletion={false}
-                columns={ordersFulfilledColumnHeaders}
-                data={ordersFulfilledMockData}
-              />
-            </div>
             <br />
             <hr />
             <br />
+
             <Row>
               <Col>
-                <Stack className="align-items-center">
-                  <h6>Asset Power Bar Chart</h6>
-                  <div>
-                    {satellitesPower !== null && (
-                      <BarChart
-                        dataset={satellitesPower}
-                        yAxis={[{ scaleType: "band", dataKey: "satellite" }]}
+                <div>
+                  <Stack className="align-items-center">
+                    <h6>Asset Order Amounts</h6>
+                    <div>
+                      <PieChart
                         series={[
                           {
-                            dataKey: "usage",
-                            label: "Usage",
+                            data: pieChartData,
+                            highlightScope: {
+                              faded: "global",
+                              highlighted: "item",
+                            },
+                            faded: {
+                              innerRadius: 30,
+                              additionalRadius: -30,
+                              color: "gray",
+                            },
                           },
                         ]}
-                        layout="horizontal"
-                        {...{
-                          xAxis: [
-                            {
-                              label: "Power Capacity",
-                            },
-                          ],
-                          width: "500",
-                          height: "500",
-                        }}
+                        height={300}
+                        width={300}
                       />
-                    )}
-                  </div>
-                </Stack>
+                    </div>
+                  </Stack>
+                </div>
               </Col>
-
               <Col>
-                <Stack>
-                  <h6>Asset Order Amounts Bar Chart</h6>
-                  <div>
-                    <PieChart
-                      series={[
-                        {
-                          data: pieChartData,
-                          highlightScope: {
-                            faded: "global",
-                            highlighted: "item",
-                          },
-                          faded: {
-                            innerRadius: 30,
-                            additionalRadius: -30,
-                            color: "gray",
-                          },
-                        },
-                      ]}
-                      height={300}
-                      width={300}
-                    />
-                  </div>
-                </Stack>
-              </Col>
-
-              <Col>
-                <Stack className="align-items-center">
-                  <h6>Asset Storage Bar Chart</h6>
-                  <div>
-                    {satellitesStorage !== null && (
-                      <BarChart
-                        dataset={satellitesStorage}
-                        yAxis={[{ scaleType: "band", dataKey: "satellite" }]}
-                        series={[
-                          {
-                            dataKey: "storage",
-                            label: "Storage",
-                          },
-                        ]}
-                        layout="horizontal"
-                        {...{
-                          xAxis: [
-                            {
-                              label: "Storage",
-                            },
-                          ],
-                          width: "500",
-                          height: "500",
-                        }}
-                      />
-                    )}
-                  </div>
-                </Stack>
+                <div>
+                  <Stack className="align-items-center">
+                    <h4>System Alerts</h4>
+                  </Stack>
+                </div>
               </Col>
             </Row>
             <br />
             <hr />
             <br />
-            <Stack className="align-items-center">
-              <h4>System Alerts</h4>
-            </Stack>
           </Container>
         </div>
       </main>
