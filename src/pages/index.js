@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from "react";
 import Head from "next/head";
-import { Container, Button, Row, Col, Stack, ListGroup } from "react-bootstrap";
+import {
+  Container,
+  Button,
+  Row,
+  Col,
+  Stack,
+  ListGroup,
+  Alert,
+} from "react-bootstrap";
 import Sidebar from "../components/Sidebar";
 import DashBoardHeader from "../components/DashBoardHeader";
 import styles from "../styles/dashboard.module.scss";
@@ -232,7 +240,7 @@ export default function Home() {
               <Col>
                 <div>
                   <Stack className="align-items-center">
-                    <h6>Asset Order Amounts</h6>
+                    <h5>Asset Order Amounts</h5>
                     <div>
                       <PieChart
                         series={[
@@ -259,7 +267,13 @@ export default function Home() {
               <Col>
                 <div>
                   <Stack className="align-items-center">
-                    <h4>System Alerts</h4>
+                    <h5>System Alerts</h5>
+                    <br />
+                    <Alert variant="danger">SOSO-1 Satellite is down</Alert>
+                    <Alert variant="success">Schedule #8129 completed</Alert>
+                    <Alert variant="warning">
+                      SOSO-3 is about to enter eclipse
+                    </Alert>
                   </Stack>
                 </div>
               </Col>
