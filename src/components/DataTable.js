@@ -5,7 +5,7 @@ import { BiSearch,  BiDownArrowAlt , BiUpArrowAlt } from 'react-icons/bi';
 import { LiaAngleLeftSolid, LiaAngleRightSolid } from "react-icons/lia";
 import styles from '../styles/dataTable.module.scss';
 
-const DataTable = ({search, tablePagination, columns, data, actionBtn, actionBtnText , rowSeletion, maintenanceButton }) => {  
+const DataTable = ({search, tablePagination, columns, data, actionBtn, actionBtnText , rowSeletion, maintenanceButton, outageRequestsButton }) => {  
   const [totalCount, setTotalCount] = useState(data.length);
   const [checked, setChecked] = useState(false);
 
@@ -113,7 +113,7 @@ const DataTable = ({search, tablePagination, columns, data, actionBtn, actionBtn
           {actionBtn && checked ? <Button type="button" className={styles.actionBtn}>{actionBtnText}</Button> : ""}
         </div>
         
-        {tablePagination && <div className={maintenanceButton ? styles.tablePaginationBtn : styles.tablePagination}>
+        {tablePagination && <div className={`${styles.tablePagination} ${maintenanceButton && styles.tablePaginationMaintenanceBtn} ${outageRequestsButton && styles.tablePaginationOutageRequestsBtn}`}>
           <Dropdown className={styles.rowCountDropdown}>
             <Dropdown.Toggle id="dropdown-basic" className={styles.rowCountDropdownBtn}>
               Page 1 of 10

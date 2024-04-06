@@ -5,21 +5,23 @@ import Sidebar from '../components/Sidebar'
 import DashBoardHeader from '../components/DashBoardHeader'
 import styles from '../styles/dashboard.module.scss'
 import axios from "axios";
+import SystemTime from "../components/SystemTime";
+import ScheduleRequests from "../components/ScheduleRequests";
 import ScheduleTimeline from "../components/schedule/timeline"
 import ScheduleTableView from "@/components/schedule/tableView";
 import { Box, Tab, Tabs, Select, InputLabel, MenuItem, FormControl } from "@mui/material";
 import { API_ENDPOINT } from "@/components/constants";
 
 export async function getStaticProps() {
-  const response = await axios.get(`${API_ENDPOINT}/schedules/`)
-  console.log(`${API_ENDPOINT}/schedules/`)
-  const data = response.data.reduce((acc, schedule_json) => {
-    acc[schedule_json['name']] = schedule_json
-    return acc
-  }, {})
+  // const response = await axios.get(`${API_ENDPOINT}/schedules/`)
+  // console.log(`${API_ENDPOINT}/schedules/`)
+  // const data = response.data.reduce((acc, schedule_json) => {
+  //   acc[schedule_json['name']] = schedule_json
+  //   return acc
+  // }, {})
   return {
     props: {
-      schedules: data,
+      schedules: {},
       endpoint: API_ENDPOINT
     }
   }
@@ -102,11 +104,16 @@ export default function ScheduleView({schedules, endpoint}) {
                   <Tabs value={tab} onChange={(_, value) => setTab(value)} aria-label="Tabs">
                     <Tab label="Table View" />
                     <Tab label="Timeline View" />
+                    <Tab label="SYSTEM TIME" />
+                    <Tab label="SCHEDULE REQUESTS" />
                   </Tabs>
                 </Box>
               </Box>
               <Box sx={{ width: "100%", marginBottom: "15px" }}>
-                {tab === 0 ? <ScheduleTableView events={scheduledEvents}/> : <ScheduleTimeline events={scheduledEvents}/>}
+                {tab === 0 && <ScheduleTableView events={scheduledEvents}/>} 
+                {tab === 1 && <ScheduleTimeline events={scheduledEvents}/>}
+                {tab == 2 && <SystemTime />} 
+                {tab == 3 && <ScheduleRequests/>}
               </Box>
             </Container>
           </div>

@@ -209,3 +209,12 @@ input[type=number] {
       }
   }
 }
+
+.scheduleRequestsTable .ht_master:not(.innerBorderInlineStart):not(.emptyColumns)~.handsontable tbody tr th {
+  border-right: 1px solid rgba(0, 0, 0, 0.1) !important; 
+}
+
+.scheduleRequestsTable .handsontable th div.ht_nestingButton {
+  right: 0;
+  padding: 0 5px;
+}

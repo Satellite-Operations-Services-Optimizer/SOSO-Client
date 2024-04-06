@@ -1,0 +1,64 @@
+@import 'variables';
+
+.scheduleRequestsTableWrap {
+    // position: relative;
+    // overflow-x: auto;
+
+    // .scheduleRequestsTable {
+    //     width: 100%;
+    // }
+
+    * {
+        box-sizing: border-box !important;
+    }
+
+    table {
+        thead {
+            tr {
+                background: #f2f2f2;
+
+                th {
+                    color: rgba(33, 33, 33, 0.45);
+                    font-size: 12px;
+                    font-weight: 500;
+                    padding: 0 8px 8px;
+                    vertical-align: baseline;
+                    border: 0 !important;
+                    background: transparent !important;
+                    text-transform: uppercase;
+                    height: unset;
+                    text-align: left !important;
+
+                    & > div {
+                        padding: 0 !important;
+                    }
+
+                    span {
+
+                    }
+                }
+                
+            }
+        }
+
+        tbody {
+            tr {
+                background: #fff;
+                th, td {
+                    padding: 8px 8px !important;
+                    color: rgb(33, 33, 33);
+                    font-size: 14px;
+                    font-weight: 500;
+                    line-height: 22px;
+                    vertical-align: middle;
+                    border-bottom: 0 !important;
+                    border: 0 !important;
+                    border-top: 1px solid rgba(0, 0, 0, 0.05) !important;
+                    background: transparent;
+                    text-align: left !important;
+                }
+            }
+        }
+    }
+}
+
