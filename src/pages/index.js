@@ -24,22 +24,14 @@ export default function Home() {
   // uncomment the below line when you add link in axios
   // const [data, setData] = useState([]);
 
+  const satelliteURL = API_ENDPOINT + "/assets/satellites";
+  const ordersURL = API_ENDPOINT + "/images/dashBoardOrders";
+
   const ordersFulfilledColumnHeaders = [
     { Header: "Order #", accessor: "id" },
     { Header: "Type", accessor: "order_type" },
     { Header: "Status", accessor: "status" },
   ];
-
-  const pieChartData = [
-    { id: 0, value: 3, label: "SAT1" },
-    { id: 1, value: 15, label: "SAT2" },
-    { id: 2, value: 20, label: "SAT3" },
-    { id: 3, value: 20, label: "SAT4" },
-    { id: 4, value: 40, label: "SAT5" },
-  ];
-
-  const satelliteURL = API_ENDPOINT + "/assets/satellites";
-  const ordersURL = API_ENDPOINT + "/images/dashBoardOrders";
 
   const [satellites, setSatellites] = useState(null);
   const [satellitesPower, setSatellitesPower] = useState(null);
@@ -47,7 +39,7 @@ export default function Home() {
 
   const [orders, setOrders] = useState(null);
   const [percentage, setPercentage] = useState(null);
-
+  const [pieChartData, setPieChartData] = useState(null);
   useEffect(() => {
     if (satellites !== null) {
       // console.log(
@@ -99,6 +91,28 @@ export default function Home() {
   }, [orders]);
 
   useEffect(() => {
+    var pieChartDataTemplate = [
+      { id: 0, value: 0, label: "SAT1" },
+      { id: 1, value: 0, label: "SAT2" },
+      { id: 2, value: 0, label: "SAT3" },
+      { id: 3, value: 0, label: "SAT4" },
+      { id: 4, value: 0, label: "SAT5" },
+    ];
+
+    if (orders !== null) {
+      for (var i = 0; i < orders.length; i++) {
+        if (
+          orders[i].status == "scheduled" &&
+          orders[i].asset_type == "satellite"
+        ) {
+          pieChartDataTemplate[orders[i].asset_id - 1].value += 1;
+        }
+      }
+    }
+    setPieChartData(pieChartDataTemplate);
+  }, [orders]);
+
+  useEffect(() => {
     axios
       .get(ordersURL)
       .then((response) => {
@@ -127,7 +141,7 @@ export default function Home() {
           <Container>
             <Row style={{ height: "100%" }}>
               <Col lg={6}>
-                <Row style={{ height: "50%" }}>
+                <Row style={{ height: "35%" }}>
                   <div>
                     <br />
                     <Stack className="align-items-center">
@@ -190,8 +204,8 @@ export default function Home() {
                                   label: "Power Capacity",
                                 },
                               ],
-                              width: "270",
-                              height: "270",
+                              width: 350,
+                              height: 350,
                             }}
                           />
                         )}
@@ -225,8 +239,8 @@ export default function Home() {
                                   label: "Storage",
                                 },
                               ],
-                              width: "270",
-                              height: "270",
+                              width: 350,
+                              height: 350,
                             }}
                           />
                         )}
@@ -250,7 +264,7 @@ export default function Home() {
                       <PieChart
                         series={[
                           {
-                            data: pieChartData,
+                            data: pieChartData !== null ? pieChartData : [],
                             highlightScope: {
                               faded: "global",
                               highlighted: "item",
