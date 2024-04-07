@@ -24,26 +24,10 @@ export default function Home() {
   // uncomment the below line when you add link in axios
   // const [data, setData] = useState([]);
 
-  const percentage = 30;
-
-  const orderStatuses = () => {
-    let returnable = {};
-    for (let i = 0; i < 10; i++) {
-      returnable["Order" + i] =
-        Math.floor(Math.random() * 2) + 1 == 1 ? "Complete" : "Incomplete";
-    }
-    return returnable;
-  };
-
   const ordersFulfilledColumnHeaders = [
-    { Header: "Order #", accessor: "order" },
+    { Header: "Order #", accessor: "id" },
+    { Header: "Type", accessor: "order_type" },
     { Header: "Status", accessor: "status" },
-  ];
-  const ordersFulfilledMockData = [
-    { order: "Order 1", status: "true" },
-    { order: "Order 2", status: "false" },
-    { order: "Order 3", status: "true" },
-    { order: "Order 4", status: "true" },
   ];
 
   const pieChartData = [
@@ -54,32 +38,30 @@ export default function Home() {
     { id: 4, value: 40, label: "SAT5" },
   ];
 
-  const [ordersFulfilled, setOrdersFulfilled] = useState(null);
-
-  useEffect(() => {
-    setOrdersFulfilled(orderStatuses());
-  }, []);
-
   const satelliteURL = API_ENDPOINT + "/assets/satellites";
+  const ordersURL = API_ENDPOINT + "/images/dashBoardOrders";
 
   const [satellites, setSatellites] = useState(null);
   const [satellitesPower, setSatellitesPower] = useState(null);
   const [satellitesStorage, setSatellitesStorage] = useState(null);
 
+  const [orders, setOrders] = useState(null);
+  const [percentage, setPercentage] = useState(null);
+
   useEffect(() => {
     if (satellites !== null) {
-      console.log(
-        "Satellite Power: ",
-        satellites.map((sat) => {
-          return { satellite: sat.name, usage: sat.power_capacity };
-        })
-      );
-      console.log(
-        "Satellite Storage: ",
-        satellites.map((sat) => {
-          return { satellite: sat.name, storage: sat.storage_capacity };
-        })
-      );
+      // console.log(
+      //   "Satellite Power: ",
+      //   satellites.map((sat) => {
+      //     return { satellite: sat.name, usage: sat.power_capacity };
+      //   })
+      // );
+      // console.log(
+      //   "Satellite Storage: ",
+      //   satellites.map((sat) => {
+      //     return { satellite: sat.name, storage: sat.storage_capacity };
+      //   })
+      // );
       setSatellitesPower(
         satellites.map((sat) => {
           return { satellite: sat.name, usage: sat.power_capacity };
@@ -97,11 +79,34 @@ export default function Home() {
     axios
       .get(satelliteURL)
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         setSatellites(response.data);
       })
       .catch((err) => {
         console.log("Satellite Endpoint error: " + JSON(err));
+      });
+  }, []);
+
+  useEffect(() => {
+    if (orders !== null) {
+      var scheduledCount = 0;
+      for (var i = 0; i < orders.length; i++) {
+        orders[i].status == "scheduled" ? (scheduledCount += 1) : null;
+      }
+      console.log("Orders completed", scheduledCount / orders.length, "%");
+      setPercentage(scheduledCount / orders.length);
+    }
+  }, [orders]);
+
+  useEffect(() => {
+    axios
+      .get(ordersURL)
+      .then((response) => {
+        console.log("dashboardOrders: ", response.data);
+        setOrders(response.data);
+      })
+      .catch((err) => {
+        console.log("Orders Endpoint error: ", err);
       });
   }, []);
 
@@ -134,17 +139,17 @@ export default function Home() {
                         }}
                       >
                         <CircularProgressbar
-                          value={percentage}
+                          value={percentage !== null ? percentage : 0}
                           text={`${percentage}%`}
                         />
                       </div>
+                      <br />
+                      <h5>% Of Orders Scheduled</h5>
                     </Stack>
                   </div>
                 </Row>
-                <br />
                 <Row style={{ height: "50%" }}>
                   <div>
-                    <br />
                     {/* <h5 className="text-center">
                       Satellite Orders and their statuses
                     </h5> */}
@@ -154,7 +159,7 @@ export default function Home() {
                       actionBtn={true}
                       rowSeletion={false}
                       columns={ordersFulfilledColumnHeaders}
-                      data={ordersFulfilledMockData}
+                      data={orders !== null ? orders : []}
                     />
                   </div>
                 </Row>
@@ -269,11 +274,31 @@ export default function Home() {
                   <Stack className="align-items-center">
                     <h5>System Alerts</h5>
                     <br />
-                    <Alert variant="danger">SOSO-1 Satellite is down</Alert>
-                    <Alert variant="success">Schedule #8129 completed</Alert>
-                    <Alert variant="warning">
-                      SOSO-3 is about to enter eclipse
-                    </Alert>
+                    {orders !== null &&
+                      orders.map((order, i) => {
+                        if (i < 5) {
+                          return (
+                            <Alert
+                              variant={
+                                order.status == "scheduled"
+                                  ? "success"
+                                  : order.status == "processing"
+                                  ? "warning"
+                                  : "danger"
+                              }
+                            >
+                              {order.order_type +
+                                " order " +
+                                order.order_id +
+                                (order.status == "scheduled"
+                                  ? " has been scheduled "
+                                  : order.status == "processing"
+                                  ? " is processing"
+                                  : " has been rejected")}
+                            </Alert>
+                          );
+                        }
+                      })}
                   </Stack>
                 </div>
               </Col>
