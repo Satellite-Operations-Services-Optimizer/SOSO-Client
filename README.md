@@ -47,17 +47,27 @@ Run the following command to start running the docker containers:
 docker compose up
 ```
 
-## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+## Deploy on Tauri
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Ensure rust is installed. Follow this link [rust](https://www.rust-lang.org/tools/install)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+2. Ensure that C++ build tools are properly installed. This should automatically be included by the rust installment steps. But if not, follow this link [build tools](https://www.rust-lang.org/tools/install)
 
-## Deploy on Vercel
+3. Install the tauri cli 
+```shell 
+cargo install tauri-cli
+``` 
+and in NPM
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+4. Create the .exe by executing the following command. This step already performs npm run build
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+```shell
+cargo tauri build
+```
+
+or by doing
+
+```shell
+npm run tauri build
+```
