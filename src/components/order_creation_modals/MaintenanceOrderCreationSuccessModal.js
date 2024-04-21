@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Modal, Button } from 'react-bootstrap';
-import styles from '../styles/dashboard.module.scss'
+import styles from '../../styles/dashboard.module.scss'
 
-export default function MaintenanceOrderModal( props ) {
+export default function MaintenanceOrderCreationSuccessModal( props ) {
 
   return (
     <Modal

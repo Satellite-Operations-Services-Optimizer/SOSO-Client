@@ -1,5 +1,5 @@
 import styles from '@/styles/dashboard.module.scss'
-import DataTable from '../DataTable'
+import DataTable from '../order_tables/DataTable'
 import moment from 'moment'
 
 const columns = [

@@ -5,6 +5,7 @@ import { Timeline } from "vis-timeline/esnext";
 import { ButtonGroup, Button, IconButton } from "@mui/material";
 import { MyLocation } from '@mui/icons-material'
 import moment from "moment";
+import EventDisplay from "./EventDisplay";
 
 let eventColors = {
   "eclipse": "grey",
@@ -13,7 +14,7 @@ let eventColors = {
   "imaging": "orange",
   "maintenance": "purple",
   "gs_outage": "red",
-  "sat_outage": "red"
+  "sat_outage": "red",
 }
 
 export default function ScheduleTimeline({events}) {
@@ -21,26 +22,44 @@ export default function ScheduleTimeline({events}) {
     const timelineRef = useRef(null)
     const [timeline, setTimeline] = useState(null)
     const [rollingMode, setRollingMode] = useState(true)
+
+    let default_start = localStorage.getItem('timelineStart') || undefined
+    let default_end = localStorage.getItem('timelineEnd') || undefined
+    let default_follow = !(default_start & default_end)
     let options = {
+        start: default_start,
+        end: default_end,
         editable: false,
-        tooltip: {followMouse: true},
-        rollingMode: {follow: true, offset: 0.5},
+        tooltip: {followMouse: false},
+        rollingMode: {follow: false},
         zoomMin: 1000 * 60, // one minute in milliseconds
         zoomMax: 1000 * 60 * 60 * 24 * 31, // about one month in milliseconds 
     }
+
+
 
     let {items, groups} = parse_events(events||[])
     useEffect(() => {
         let tmline = new Timeline(timelineRef.current, items, groups, options)
         setTimeline(tmline)
+        tmline.on('rangechanged', function (properties) {
+            const { start, end } = properties;
+            localStorage.setItem('timelineStart', start);
+            localStorage.setItem('timelineEnd', end);
+        })
+        tmline.on('onInitialDrawComplete', function () {
+            tmline.setOptions({rollingMode: false})
+            tmline.setWindow(default_start, default_end);
+        })
         return () => {
             tmline.destroy()
         }
     }, [])
+    
     useEffect(() => {
         if (!timeline) return
         focusTimeline('hour')
-        setRollingMode(true)
+        // setRollingMode(true)
     }, [timeline])
     // useEffect(() => {
     //     if (!timeline) return
@@ -94,21 +113,14 @@ function parse_events(events) {
             max_group_id += 1
         }
 
-        let duration = moment.duration(event.duration, 'seconds')
-        
         items.push({
             id: event_id,
             group: groups_by_title[group_title].id,
             content: event["event_type"],
             start,
             end,
-            style: `background-color: ${eventColors[event["event_type"]]};`,
-            title: renderToString(<>
-                <div>Type: {event["event_type"]}</div>
-                {event["groundstation_id"] && <div>Ground station: {event["groundstation_id"]}</div>}
-                <div>Start time: {moment(event["start_time"]).format("llll")}</div>
-                <div>Duration: {moment.utc(duration.asMilliseconds()).format("H[h ]m[m ]s[s ]")}</div>
-            </>)
+            style: `background-color: ${eventColors[event["event_type"]]}; outline: 1px solid ${eventColors[event["event_type"]]};`,
+            title: renderToString(<EventDisplay event={event} />)
         })
     })
     return {

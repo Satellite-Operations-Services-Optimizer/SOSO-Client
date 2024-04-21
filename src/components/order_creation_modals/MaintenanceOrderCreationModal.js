@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import { Button, Form, Row, Col, Modal } from 'react-bootstrap'
-import MaintenanceOrderModal from './MaintenanceOrderModal'
-import styles from '../styles/dashboard.module.scss'
+import MaintenanceOrderCreationSuccessModal from './MaintenanceOrderCreationSuccessModal'
+import styles from '../../styles/dashboard.module.scss'
 
 
-export default function MaintenanceRequestModal({showModal, setShowModal}) {
+export default function MaintenanceOrderCreationModal({showModal, setShowModal}) {
   const [maintenanceId, setMaintenanceId] = useState("ID (int)");
   const [modalShow, setModalShow] = useState(false);
   const [satelliteName, setSatelliteName] = useState("Name");
@@ -104,7 +104,7 @@ export default function MaintenanceRequestModal({showModal, setShowModal}) {
           <Button type="button" className={styles.submitBtn} onClick={handleSubmit}>Submit Data</Button>
         </Modal.Footer>
       </Modal>
-      <MaintenanceOrderModal
+      <MaintenanceOrderCreationSuccessModal
         show={modalShow}
         onHide={() => setModalShow(false)}
         maintenanceId={maintenanceId}

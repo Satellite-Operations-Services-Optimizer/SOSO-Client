@@ -14,18 +14,18 @@ import DashBoardHeader from "../components/DashBoardHeader";
 import styles from "../styles/dashboard.module.scss";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
-import DataTable from "@/components/DataTable";
+import DataTable from "@/components/order_tables/DataTable";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { PieChart } from "@mui/x-charts/PieChart";
 import axios from "axios";
-import { API_ENDPOINT } from "@/components/constants";
 
 export default function Home() {
   // uncomment the below line when you add link in axios
   // const [data, setData] = useState([]);
 
-  const satelliteURL = API_ENDPOINT + "/assets/satellites";
-  const ordersURL = API_ENDPOINT + "/images/dashBoardOrders";
+  const base_url = process.env.NEXT_PUBLIC_BASE_API_URL
+  const satelliteURL = `${base_url}/assets/satellites`;
+  const ordersURL = `${base_url}/images/orders`;
 
   const ordersFulfilledColumnHeaders = [
     { Header: "Order #", accessor: "id" },

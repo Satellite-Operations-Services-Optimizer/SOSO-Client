@@ -3,12 +3,16 @@ import { useTable, useFilters, useRowSelect, usePagination, useGlobalFilter, use
 import { Form, Button, Dropdown } from 'react-bootstrap';
 import { BiSearch,  BiDownArrowAlt , BiUpArrowAlt } from 'react-icons/bi';
 import { LiaAngleLeftSolid, LiaAngleRightSolid } from "react-icons/lia";
-import styles from '../styles/dataTable.module.scss';
+import styles from '../../styles/dataTable.module.scss';
 
-const DataTable = ({search, tablePagination, columns, data, actionBtn, actionBtnText , rowSeletion, maintenanceButton, outageRequestsButton }) => {  
+const DataTable = ({search, tablePagination, columns, data, actionBtn, actionBtnText, action, rowSeletion, maintenanceButton, outageRequestsButton, initialSelectedRowIds, onSelectionChanged, onPageChange}) => {  
   const [totalCount, setTotalCount] = useState(data.length);
   const [checked, setChecked] = useState(false);
 
+  initialSelectedRowIds = (initialSelectedRowIds || []).reduce((acc, id) => {
+    acc[id] = true;
+    return acc;
+  }, {});
 
   const {
     getTableProps,
@@ -35,7 +39,7 @@ const DataTable = ({search, tablePagination, columns, data, actionBtn, actionBtn
     {
       columns,
       data,
-      initialState: { pageIndex: 0 },
+      initialState: { pageIndex: 0, selectedRowIds: initialSelectedRowIds},
     },
     useGlobalFilter,
     useFilters,
@@ -70,8 +74,16 @@ const DataTable = ({search, tablePagination, columns, data, actionBtn, actionBtn
   const { globalFilter, pageIndex, pageSize } = state;
 
   useEffect(() => {
-    setChecked(Object.keys(selectedRowIds).length === rows.length || Object.keys(selectedRowIds).length > 0);
+    setChecked(Object.keys(selectedRowIds).length = 0);
   }, [Object.keys(selectedRowIds).length]);
+
+  useEffect(() => {
+    onSelectionChanged && onSelectionChanged(Object.keys(selectedRowIds))
+  }, [Object.keys(selectedRowIds)])
+
+  useEffect(() => {
+    onPageChange && onPageChange(pageIndex, pageSize);
+  }, [pageIndex, pageSize]);
 
   return (
     <>
@@ -110,13 +122,13 @@ const DataTable = ({search, tablePagination, columns, data, actionBtn, actionBtn
               </Dropdown.Menu>
             </Dropdown>
             }
-          {actionBtn && checked ? <Button type="button" className={styles.actionBtn}>{actionBtnText}</Button> : ""}
+          {actionBtn && checked ? <Button type="button" className={styles.actionBtn} onClick={() => action(checked)}>{actionBtnText}</Button> : ""}
         </div>
         
         {tablePagination && <div className={`${styles.tablePagination} ${maintenanceButton && styles.tablePaginationMaintenanceBtn} ${outageRequestsButton && styles.tablePaginationOutageRequestsBtn}`}>
           <Dropdown className={styles.rowCountDropdown}>
             <Dropdown.Toggle id="dropdown-basic" className={styles.rowCountDropdownBtn}>
-              Page 1 of 10
+              Page {pageCount}
             </Dropdown.Toggle>
             <Dropdown.Menu className={styles.rowCountDropdownMenu}>
               <Dropdown.Item>15</Dropdown.Item>

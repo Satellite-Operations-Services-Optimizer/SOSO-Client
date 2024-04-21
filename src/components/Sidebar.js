@@ -41,8 +41,8 @@ const Sidebar = () => {
                 </div> */}
 
                 <div className={styles.sidebarNavigation}>
-                    <div className={router.pathname === '/maintenanceRequest' || router.pathname === '/orbitManeuver' || router.pathname === '/memoryScrub' || router.pathname === '/orbitParameterUpdate' || router.pathname === '/payloadDiagnosticActivity' ? styles.dropdownBtnActive : styles.dropdownBtn}>
-                        <Link href="/maintenanceRequest"><ImWrench /><span>Maintenance Request</span></Link>
+                    <div className={router.pathname === '/maintenanceOrders' || router.pathname === '/orbitManeuver' || router.pathname === '/memoryScrub' || router.pathname === '/orbitParameterUpdate' || router.pathname === '/payloadDiagnosticActivity' ? styles.dropdownBtnActive : styles.dropdownBtn}>
+                        <Link href="/maintenanceOrders"><ImWrench /><span>Maintenance Request</span></Link>
                         <Button type="button" className={ dropdown1 || router.pathname === '/orbitManeuver' || router.pathname === '/memoryScrub' || router.pathname === '/orbitParameterUpdate' || router.pathname === '/payloadDiagnosticActivity' ? styles.navLinkFilterActive :  styles.navLinkFilter} onClick={() => setDropdown1(!dropdown1)}>
                                 Filters<MdOutlineFilterList />
                         </Button>
@@ -64,7 +64,7 @@ const Sidebar = () => {
                     <Link href="/imageOrders" className={router.pathname === '/imageOrders' ? styles.dropdownBtnActive : styles.dropdownBtn}><IoIosImages /><span>Image Orders</span></Link>
                 </div>
                 <div className={styles.sidebarNavigation}>
-                    <Link href="/outageRequests" className={router.pathname === '/outageRequests' ? styles.dropdownBtnActive : styles.dropdownBtn}><MdAppsOutage /><span>Outage Requests</span></Link>
+                    <Link href="/outageOrders" className={router.pathname === '/outageOrders' ? styles.dropdownBtnActive : styles.dropdownBtn}><MdAppsOutage /><span>Outage Requests</span></Link>
                 </div>
             </div>
         </div>

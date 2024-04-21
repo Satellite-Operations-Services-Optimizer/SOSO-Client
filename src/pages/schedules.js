@@ -7,29 +7,27 @@ import styles from '../styles/dashboard.module.scss'
 import axios from "axios";
 import SystemTime from "../components/SystemTime";
 import ScheduleRequests from "../components/ScheduleRequests";
-import ScheduleTimeline from "../components/schedule/timeline"
-import ScheduleTableView from "@/components/schedule/tableView";
+import ScheduleTimeline from "../components/schedule/ScheduleTimeline"
+import ScheduleTableView from "@/components/schedule/ScheduleTableView";
 import { Box, Tab, Tabs, Select, InputLabel, MenuItem, FormControl } from "@mui/material";
-import { API_ENDPOINT } from "@/components/constants";
 
 export async function getStaticProps() {
-  // const response = await axios.get(`${API_ENDPOINT}/schedules/`)
-  // console.log(`${API_ENDPOINT}/schedules/`)
-  // const data = response.data.reduce((acc, schedule_json) => {
-  //   acc[schedule_json['name']] = schedule_json
-  //   return acc
-  // }, {})
+  let base_url = process.env.NEXT_PUBLIC_BASE_API_URL
+  const response = await axios.get(`${base_url}/schedules/`)
+  const data = response.data.reduce((acc, schedule_json) => {
+    acc[schedule_json['name']] = schedule_json
+    return acc
+  }, {})
   return {
     props: {
-      schedules: {},
-      endpoint: API_ENDPOINT
+      schedules: data,
     }
   }
 }
 
-let displayed_event_types = ["eclipse", "contact", "capture", "imaging"]//, "maintenance", "gs_outage", "sat_outage"
+let displayed_event_types = ["imaging", "maintenance", "gs_outage", "sat_outage"]
 
-export default function ScheduleView({schedules, endpoint}) {
+export default function ScheduleView({schedules}) {
   const defaultScheduleName = "Default Schedule"
   const [tab, setTab] = useState(0);
   const [currentScheduleName, setCurrentScheduleName] = useState(defaultScheduleName)
@@ -42,7 +40,8 @@ export default function ScheduleView({schedules, endpoint}) {
         event_types_filter = '?event_types=' + displayed_event_types.join('&event_types=')
       }
       
-      let url = `${endpoint}/schedules/${scheduleInfos[currentScheduleName]?.id}/events${event_types_filter}`
+      let base_url = process.env.NEXT_PUBLIC_BASE_API_URL
+      let url = `${base_url}/schedules/${scheduleInfos[currentScheduleName]?.id}/events${event_types_filter}`
       const response = await axios.get(url)
       setScheduledEvents(response.data)
     } catch (error) {

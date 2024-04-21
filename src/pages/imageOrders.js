@@ -3,7 +3,7 @@ import Head from 'next/head'
 import { Container, Button } from 'react-bootstrap'
 import Sidebar from '../components/Sidebar'
 import DashBoardHeader from '../components/DashBoardHeader'
-import DataTable from '../components/DataTable'
+import DataTable from '../components/order_tables/DataTable'
 import styles from '../styles/dashboard.module.scss'
 import axios from "axios";
 

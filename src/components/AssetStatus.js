@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Button } from "react-bootstrap";
-import DataTable from "../components/DataTable";
+import DataTable from "./order_tables/DataTable";
 import { MdAdd } from "react-icons/md";
 import axios from "axios";
 import AddGSModal from "./AddGSModal";
