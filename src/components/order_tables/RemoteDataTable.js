@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from 'react'
+import _ from 'lodash'
 import DataTable from 'react-data-table-component'
 
-export default function RemoteDataTable({title, columns, fetchPaginatedData, preselectedRows, onSelectedRowsChange}) {
+export default function RemoteDataTable({title, columns, fetchPaginatedData, isPaginated=true, preselectedRows, onSelectedRowsChange}) {
     const [data, setData] = useState([])
     const [loading, setLoading] = useState(false)
     const [totalRows, setTotalRows] = useState(0)
-    const [perPage, setPerPage] = useState(25)
-    const [selectedRows, setSelectedRows] = useState([])
+    const [perPage, setPerPage] = useState(10)
+    const [selectedRows, setSelectedRows] = useState(preselectedRows)
 
-    const handleRowSelected = React.useCallback(state => {
-		setSelectedRows(state.selectedRows);
-        onSelectedRowsChange(selectedRows);
-	}, []);
+    const handleRowSelected = (state) => {
+        if (!_.isEqual(selectedRows, state.selectedRows)) {
+            setSelectedRows(state.selectedRows)
+            onSelectedRowsChange && onSelectedRowsChange(state.selectedRows);
+        }
+	}
 
     const fetchData = async (page) => {
         setLoading(true)
@@ -34,8 +37,7 @@ export default function RemoteDataTable({title, columns, fetchPaginatedData, pre
         fetchData(1)
     }, [])
 
-    preselectedRows = new Set(preselectedRows)
-    console.log(totalRows)
+    let preselectedOrderIds = new Set((preselectedRows||[]).map(row => row.id))
 
     return <>
         <DataTable
@@ -43,13 +45,15 @@ export default function RemoteDataTable({title, columns, fetchPaginatedData, pre
             columns={columns}
             data={data}
             progressPending={loading}
-            pagination
-            paginationServer
-            paginationTotalRows={totalRows}
-            onChangeRowsPerPage={handleRowsPerPageChange}
-            onChangePage={fetchData}
+            {...(isPaginated ? {
+                pagination: true,
+                paginationServer: true,
+                paginationTotalRows: totalRows,
+                onChangeRowsPerPage: handleRowsPerPageChange,
+                onChangePage: fetchData
+            } : {})}
             selectableRows
-            selectableRowsSelected={row => preselectedRows.has(row)}
+            selectableRowSelected={row => preselectedOrderIds.has(row.id)}
             onSelectedRowsChange={handleRowSelected}
         />
     </>

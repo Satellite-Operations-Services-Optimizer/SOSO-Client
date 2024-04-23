@@ -12,15 +12,17 @@ import MaintenanceOrderCreationModal from "../components/order_creation_modals/M
 import { Box, Tab, Tabs, Select, InputLabel, MenuItem, FormControl, Chip } from "@mui/material";
 
 export default function MaintenanceOrders() {
-  const [selectedOrderIds, setSelectedOrderIds] = useState([])
+  const [requestViewOrderIds, setRequestViewOrderIds] = useState([])
+  const preselectedOrderRows = React.useRef([]);
   const [showModal, setShowModal] = useState(false);
   const [tab, setTab] = useState(0);
   
-  let onSelectionChanged = React.useCallback(selectedOrderIds => {
-    setSelectedOrderIds(selectedOrderIds)
+  let onSelectionChanged = React.useCallback((selectedRows) => {
+    setRequestViewOrderIds(selectedRows.map(row => row.id))
+    preselectedOrderRows.current = selectedRows
   }, [])
 
-  console.log(`hi ${selectedOrderIds}`)
+  // IDEA?: Memoize the OrderView component to prevent re-rendering whenever onSelectionChanged triggers a state change (cuz that would cause an infinite loop of making this component rerender, rerendering this OrderView, causing the onSelectionChanged to trigger again, and so on...) 
 
   return (
     <>
@@ -36,11 +38,15 @@ export default function MaintenanceOrders() {
         <div className="dashboardContent">
           <div className={styles.dashboardMainContent}>
             <Container className={styles.container}>
-              <Button type="button" className={styles.maintenanceOrderCreateBtn} onClick={() => setShowModal(true)}><MdAdd /> CREATE MAINTENANCE ORDER</Button>
-              <div style={{ overflowX: "scroll", whiteSpace: "nowrap" }}>
-                {selectedOrderIds.map((id) => (
-                  <Chip key={id} label={`order #${id}`} style={{ margin: "5px" }} />
-                ))}
+              <div>
+                <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                  <Button type="button" className={styles.maintenanceOrderCreateBtn} onClick={() => setShowModal(true)}><MdAdd /> CREATE MAINTENANCE ORDER</Button>
+                </div>
+                <div style={{ overflowX: "scroll", whiteSpace: "nowrap", display: "flex", alignItems: "center" }}>
+                  {requestViewOrderIds.map((id) => (
+                    <Chip key={id} label={`order #${id}`} style={{ margin: "5px" }} />
+                  ))}
+                </div>
               </div>
               <Box sx={{ width: "100%", marginBottom: "15px" }}>
                 <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -51,8 +57,8 @@ export default function MaintenanceOrders() {
                 </Box>
               </Box>
               <Box sx={{ width: "100%", marginBottom: "15px" }}>
-                {tab === 0 && <OrderView orderType="maintenance" selectedOrderIds={selectedOrderIds} onSelectionChanged={onSelectionChanged}/>} 
-                {tab === 1 && <RequestsView orderType="maintenance" orderIds={selectedOrderIds}/>}
+                {tab === 0 && <OrderView orderType="maintenance" preselectedRows={preselectedOrderRows.current} onSelectionChanged={onSelectionChanged}/>} 
+                {tab === 1 && <RequestsView orderType="maintenance" orderIds={requestViewOrderIds}/>}
               </Box>
             </Container>
           </div>

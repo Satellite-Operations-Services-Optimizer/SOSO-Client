@@ -1,13 +1,29 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Button, Form, Row, Col, Modal } from 'react-bootstrap'
 import MaintenanceOrderCreationSuccessModal from './MaintenanceOrderCreationSuccessModal'
 import styles from '../../styles/dashboard.module.scss'
+import { set } from 'lodash';
+import { Typeahead } from 'react-bootstrap-typeahead';
+import 'react-bootstrap-typeahead/css/Typeahead.css';
+import axios from "axios";
 
 
 export default function MaintenanceOrderCreationModal({showModal, setShowModal}) {
   const [maintenanceId, setMaintenanceId] = useState("ID (int)");
   const [modalShow, setModalShow] = useState(false);
-  const [satelliteName, setSatelliteName] = useState("Name");
+  const [satelliteNames, setSatelliteNames] = useState([]);
+  const [groundstationNames, setGroundstationNames] = useState([])
+
+  let fetchAssetNames = async () => {
+    let base_url = process.env.NEXT_PUBLIC_BASE_API_URL
+    let response = await axios.get(`${base_url}/assets/names`)
+    setSatelliteNames(response.data.satellites)
+    setGroundstationNames(response.data.groundstations)
+  }
+
+  useEffect(() => {
+    fetchAssetNames()
+  }, [])
 
   const handleSubmit = () => {
     setModalShow(true)
@@ -31,9 +47,12 @@ export default function MaintenanceOrderCreationModal({showModal, setShowModal})
             <Row className={styles.formRow}>
               <Form.Group as={Col} md="6" className={styles.formCol}>
                 <div className={styles.materialInput}>
-                  <Form.Control type="text" required />
-                  <span className={styles.inputBar}></span>
-                  <Form.Label>Target</Form.Label>
+                  <Typeahead
+                    id="target-typeahead"
+                    options={satelliteNames.concat(groundstationNames)}
+                    placeholder="Target"
+                    required
+                  />
                 </div>
               </Form.Group>
               <Form.Group as={Col} md="6" className={styles.formCol}>
