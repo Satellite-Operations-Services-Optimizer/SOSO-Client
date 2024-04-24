@@ -1,18 +1,25 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Form, Row, Col, Modal } from 'react-bootstrap'
-import MaintenanceOrderCreationSuccessModal from './MaintenanceOrderCreationSuccessModal'
+import { Button, Form, Row, Col, Modal, InputGroup, DropdownButton, Dropdown } from 'react-bootstrap'
 import styles from '../../styles/dashboard.module.scss'
-import { set } from 'lodash';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 import axios from "axios";
+import OrderCreationSuccessModal from './OrderCreationSuccessModal';
+import Datetime from 'react-datetime'
+import "react-datetime/css/react-datetime.css";
 
 
 export default function MaintenanceOrderCreationModal({showModal, setShowModal}) {
+  const defaultMinRepeatFrequencyUnits = "days"
   const [maintenanceId, setMaintenanceId] = useState("ID (int)");
   const [modalShow, setModalShow] = useState(false);
   const [satelliteNames, setSatelliteNames] = useState([]);
   const [groundstationNames, setGroundstationNames] = useState([])
+  const [windowStart, setWindowStart] = useState([new Date(), new Date()])
+  const [windowEnd, setWindowEnd] = useState([new Date(), new Date()])
+  const [minRepeatFrequencyUnits, setMinRepeatFrequencyUnits] = useState(defaultMinRepeatFrequencyUnits)
+
+  const timeUnitOptions = ["mins", "hours", "days", "weeks", "months", "years"]
 
   let fetchAssetNames = async () => {
     let base_url = process.env.NEXT_PUBLIC_BASE_API_URL
@@ -32,11 +39,11 @@ export default function MaintenanceOrderCreationModal({showModal, setShowModal})
 
   return (
     <>
-      <Modal 
+      <Modal
         size="lg"
-        show={showModal} 
+        show={showModal}
         onHide={() => setShowModal(false)}
-        className={styles.customModal} 
+        className={styles.customModal}
         centered
         >
         <Modal.Header className={styles.customModalHeader} closeButton>
@@ -64,52 +71,58 @@ export default function MaintenanceOrderCreationModal({showModal, setShowModal})
               </Form.Group>
               <Form.Group as={Col} md="6" className={styles.formCol}>
                 <div className={styles.materialInput}>
-                  <Form.Control type="text" required />
-                  <span className={styles.inputBar}></span>
-                  <Form.Label>Window Start</Form.Label>
+                  <Datetime value={windowStart} onChange={setWindowStart} inputProps={{placeholder: 'Window Start'}}/>
                 </div>
               </Form.Group>
               <Form.Group as={Col} md="6" className={styles.formCol}>
                 <div className={styles.materialInput}>
-                  <Form.Control type="text" required />
-                  <span className={styles.inputBar}></span>
-                  <Form.Label>Window End</Form.Label>
-                </div>
-              </Form.Group>
-              <Form.Group as={Col} md="12" className={styles.formCol}>
-                <div className={styles.materialInput}>
-                  <Form.Control type="text" required />
-                  <span className={styles.inputBar}></span>
-                  <Form.Label>Duration</Form.Label>
+                  <Datetime value={windowEnd} onChange={setWindowEnd} inputProps={{placeholder: 'Window End'}}/>
                 </div>
               </Form.Group>
               <Form.Group as={Col} md="6" className={styles.formCol}>
                 <div className={styles.materialInput}>
-                  <Form.Control type="text" required />
-                  <span className={styles.inputBar}></span>
-                  <Form.Label>RepeatCycle Frequency MinimumGap</Form.Label>
+                  <InputGroup className="mb-3">
+                    <Form.Control placeholder="Duration" required/>
+                    <Form.Select required>
+                      {timeUnitOptions.map((option) => {
+                        return (<option value={option}>{option}</option>)
+                      })}
+                    </Form.Select>
+                    <span className={styles.inputBar}></span>
+                  </InputGroup>
                 </div>
               </Form.Group>
               <Form.Group as={Col} md="6" className={styles.formCol}>
                 <div className={styles.materialInput}>
-                  <Form.Control type="text" required />
-                  <span className={styles.inputBar}></span>
-                  <Form.Label>RepeatCycle Frequency MaximumGap</Form.Label>
+                  <InputGroup className="mb-3">
+                    <Form.Control placeholder="Repeat frequency (min)" />
+                    <Form.Select>
+                      {timeUnitOptions.map((option) => {
+                        return (<option value={option}>{option}</option>)
+                      })}
+                    </Form.Select>
+                    <span className={styles.inputBar}></span>
+                  </InputGroup>
                 </div>
               </Form.Group>
               <Form.Group as={Col} md="6" className={styles.formCol}>
                 <div className={styles.materialInput}>
-                  <Form.Control type="text" required />
-                  <span className={styles.inputBar}></span>
-                  <Form.Label>RepeatCycle Repetition</Form.Label>
+                  <InputGroup className="mb-3">
+                    <Form.Control placeholder="Repeat frequency (max)" />
+                    <Form.Select>
+                      {timeUnitOptions.map((option) => {
+                        return (<option value={option}>{option}</option>)
+                      })}
+                    </Form.Select>
+                    <span className={styles.inputBar}></span>
+                  </InputGroup>
                 </div>
               </Form.Group>
               <Form.Group as={Col} md="6" className={styles.formCol}>
                 <div className={styles.materialSelect}>
                   <Form.Select required>
-                    <option value="" disabled selected></option>
-                    <option value="0">False</option>
-                    <option value="1">True</option>
+                    <option value={false}>False</option>
+                    <option value={true}>True</option>
                   </Form.Select>
                   <span className={styles.selectBar}></span>
                   <Form.Label>PayloadOutage</Form.Label>
@@ -123,10 +136,10 @@ export default function MaintenanceOrderCreationModal({showModal, setShowModal})
           <Button type="button" className={styles.submitBtn} onClick={handleSubmit}>Submit Data</Button>
         </Modal.Footer>
       </Modal>
-      <MaintenanceOrderCreationSuccessModal
+      <OrderCreationSuccessModal
         show={modalShow}
         onHide={() => setModalShow(false)}
-        maintenanceId={maintenanceId}
+        orderId={maintenanceId}
       />
     </>
   )

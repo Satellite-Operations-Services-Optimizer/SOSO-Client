@@ -5,7 +5,6 @@ import Sidebar from '../components/Sidebar'
 import DashBoardHeader from '../components/DashBoardHeader'
 import { MdAdd } from "react-icons/md";
 import styles from '../styles/dashboard.module.scss'
-import axios from "axios";
 import OrderView from "@/components/order_tables/OrderView";
 import RequestsView from "@/components/order_tables/RequestsView";
 import MaintenanceOrderCreationModal from "../components/order_creation_modals/MaintenanceOrderCreationModal";
@@ -21,8 +20,6 @@ export default function MaintenanceOrders() {
     setRequestViewOrderIds(selectedRows.map(row => row.id))
     preselectedOrderRows.current = selectedRows
   }, [])
-
-  // IDEA?: Memoize the OrderView component to prevent re-rendering whenever onSelectionChanged triggers a state change (cuz that would cause an infinite loop of making this component rerender, rerendering this OrderView, causing the onSelectionChanged to trigger again, and so on...) 
 
   return (
     <>

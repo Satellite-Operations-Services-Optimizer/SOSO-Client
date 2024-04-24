@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import styles from '../../styles/dashboard.module.scss'
 
-export default function MaintenanceOrderCreationSuccessModal( props ) {
+export default function OrderCreationSuccessModal(props) {
 
   return (
     <Modal
@@ -14,7 +14,7 @@ export default function MaintenanceOrderCreationSuccessModal( props ) {
       <Modal.Header className={styles.customModalHeader} closeButton>
       </Modal.Header>
       <Modal.Body>
-        <p className={styles.stationName}>Maintenance Order <br/>added!</p>
+        <p className={styles.stationName}>Order <br/>added!</p>
         <span className={styles.maintenanceId}>{props.maintenanceId}</span>
       </Modal.Body>
       <Modal.Footer className={styles.customModalFooter}>

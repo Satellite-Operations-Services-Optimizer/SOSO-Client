@@ -25,6 +25,10 @@ const maintenanceOrderColumns = [
 
 const imageOrderColumns = [
     { name: 'ID', selector: row => row.id, sortable: true },
+    { name: 'Image Type', selector: row => row.image_type, sortable: true },
+    { name: 'Latitude', selector: row => row.latitude, sortable: true },
+    { name: 'Longitude', selector: row => row.longitude, sortable: true },
+    { name: 'Window start', selector: row => row.display_window_start, sortable: true, sortField: 'window_start'},
     { name: 'Window start', selector: row => row.display_window_start, sortable: true, sortField: 'window_start' },
     { name: 'Window end', selector: row => row.display_window_end, sortable: true, sortField: 'window_end' },
     { name: 'Duration', selector: row => row.display_duration, sortable: true, sortField: 'duration' },

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import _ from 'lodash'
 import DataTable from 'react-data-table-component'
 
-export default function RemoteDataTable({title, columns, fetchPaginatedData, isPaginated=true, preselectedRows, onSelectedRowsChange}) {
+export default function RemoteDataTable({title, columns, fetchPaginatedData, isPaginated=true, isSelectable=true, preselectedRows, onSelectedRowsChange}) {
     const [data, setData] = useState([])
     const [loading, setLoading] = useState(false)
     const [totalRows, setTotalRows] = useState(0)
@@ -52,9 +52,11 @@ export default function RemoteDataTable({title, columns, fetchPaginatedData, isP
                 onChangeRowsPerPage: handleRowsPerPageChange,
                 onChangePage: fetchData
             } : {})}
-            selectableRows
-            selectableRowSelected={row => preselectedOrderIds.has(row.id)}
-            onSelectedRowsChange={handleRowSelected}
+            {...(isSelectable ? {
+                selectableRows: true,
+                selectableRowSelected: row => preselectedOrderIds.has(row.id),
+                onSelectedRowsChange: handleRowSelected
+            } : {})}
         />
     </>
 }

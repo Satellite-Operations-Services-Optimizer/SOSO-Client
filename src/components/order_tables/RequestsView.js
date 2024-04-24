@@ -8,6 +8,7 @@ import { transformOrderDataForDisplay } from '../utils'
 const imageRequestColumns = [
     { name: 'ID', selector: row => row.id, sortable: true },
     { name: 'Order ID', selector: row => row.order_id, sortable: true },
+    { name: 'Status', selector: row => row.display_status, sortable: true, sortField: 'status' },
     // { name: 'Order Type', selector: row => row.order_type, sortable: true },
     { name: 'Latitude', selector: row => row.latitude, sortable: true },
     { name: 'Longitude', selector: row => row.longitude, sortable: true },
@@ -19,13 +20,13 @@ const imageRequestColumns = [
     { name: 'Priority', selector: row => row.priority, sortable: true },
     { name: 'Payload size', selector: row => row.downlink_size, sortable: true },
     { name: 'Power usage', selector: row => row.power_usage, sortable: true },
-    { name: 'Status', selector: row => row.display_status, sortable: true, sortField: 'status' },
     { name: 'Status message', selector: row => row.status_message, sortable: true },
 ];
 
 const maintenanceRequestColumns = [
     { name: 'ID', selector: row => row.id, sortable: true },
     { name: 'Order ID', selector: row => row.order_id, sortable: true },
+    { name: 'Status', selector: row => row.display_status, sortable: true, sortField: 'status' },
     // { name: 'Order Type', selector: row => row.order_type, sortable: true },
     { name: 'Window start', selector: row => row.display_window_start, sortable: true, sortField: 'window_start'},
     { name: 'Window end', selector: row => row.display_window_end, sortable: true, sortField: 'window_end' },
@@ -34,33 +35,28 @@ const maintenanceRequestColumns = [
     { name: 'Priority', selector: row => row.priority, sortable: true },
     { name: 'Payload size', selector: row => row.downlink_size, sortable: true },
     { name: 'Power usage', selector: row => row.power_usage, sortable: true },
-    { name: 'Status', selector: row => row.display_status, sortable: true, sortField: 'status' },
     { name: 'Status message', selector: row => row.status_message, sortable: true },
 ];
 
 const outageRequestColumns = [
     { name: 'ID', selector: row => row.id, sortable: true },
     { name: 'Order ID', selector: row => row.order_id, sortable: true },
+    { name: 'Status', selector: row => row.display_status, sortable: true, sortField: 'status' },
     // { name: 'Order Type', selector: row => row.order_type, sortable: true },
     { name: 'Asset name', selector: row => row.asset_name, sortable: true },
     { name: 'Start time', selector: row => row.display_window_start, sortable: true },
     { name: 'End time', selector: row => row.display_window_end, sortable: true },
     { name: 'Duration', selector: row => row.display_duration, sortable: true },
-    { name: 'Status', selector: row => row.display_status, sortable: true, sortField: 'status' },
 ];
 
 export default function RequestsView({orderType, orderIds}) {
     let columns;
-    let requestTypes;
     if (orderType==="maintenance") {
         columns = maintenanceRequestColumns;
-        requestTypes = ["maintenance"];
     } else if (orderType==="imaging") {
         columns = imageRequestColumns;
-        requestTypes = ["imaging"];
     } else if (orderType==="outage") {
         columns = outageRequestColumns;
-        requestTypes = ["gs_outage", "sat_outage"];
     }
 
     let fetchPaginatedRequestsData = async (page, perPage) => {
@@ -71,8 +67,8 @@ export default function RequestsView({orderType, orderIds}) {
 
             let pagingParams = `page=${page}&per_page=${perPage}`
             let orderIdParams = orderIds.length > 0 ? 'order_ids=' + orderIds.join('&order_ids=') : ''
-            let requestTypeParams = requestTypes.length > 0 ? 'request_types=' + requestTypes.join('&request_types=') : ''
-            let params = [pagingParams, orderIdParams, requestTypeParams].filter(param => param.length > 0).join('&')
+            let orderTypeParams = `order_types=${orderType}`
+            let params = [pagingParams, orderIdParams, orderTypeParams].filter(param => param.length > 0).join('&')
 
             let endpoint = `${base_url}/schedules/requests?${params}`
             const response = await axios.get(endpoint)
@@ -93,6 +89,8 @@ export default function RequestsView({orderType, orderIds}) {
                     title="Requests"
                     columns={columns}
                     fetchPaginatedData={fetchPaginatedRequestsData}
+                    isSelectable={true}
+                    onSelectedRowsChange={selectedRows => console.log(selectedRows)}
                 />
             </div>
         </div>

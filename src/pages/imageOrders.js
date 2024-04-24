@@ -1,215 +1,25 @@
-import React, { useState, useEffect } from "react";
+import React, { useState} from "react";
 import Head from 'next/head'
-import { Container, Button } from 'react-bootstrap'
+import { Container, Button, Modal } from 'react-bootstrap'
 import Sidebar from '../components/Sidebar'
 import DashBoardHeader from '../components/DashBoardHeader'
-import DataTable from '../components/order_tables/DataTable'
+import { MdAdd } from "react-icons/md";
 import styles from '../styles/dashboard.module.scss'
-import axios from "axios";
-
-const columns = [
-  {
-    Header: 'Latitude',
-    accessor: 'latitude', 
-  },
-  {
-    Header: 'Longitude',
-    accessor: 'longitude',
-  },
-  {
-    Header: 'Priority',
-    accessor: 'priority',
-  },
-  {
-    Header: 'Image Type',
-    accessor: 'imageType',
-  },
-  {
-    Header: 'Image Start Time',
-    accessor: 'imageStartTime',
-  },
-  {
-    Header: 'Image End Time',
-    accessor: 'imageEndTime',
-  },
-  {
-    Header: 'Delivery Time',
-    accessor: 'deliveryTime',
-  },
-  {
-    Header: 'Revisit Time',
-    accessor: 'revisitTime',
-  },
-  // Add more columns as needed
-];
-
-// when you add API Url just comment this
-const data = [{
-  latitude: -0.3157088942224249,
-  longitude: 111.84921138464108,
-  priority: 1,
-  imageType: "High",
-  imageStartTime: "2023-10-09 T22:58:54",
-  imageEndTime: "2023-10-09 T23:58:54",
-  deliveryTime: "2023-10-10 T05:58:54",
-  revisitTime: "False"
-},{
-  latitude: -0.3157088942224249,
-  longitude: 111.84921138464108,
-  priority: 1,
-  imageType: "Low",
-  imageStartTime: "2023-10-09 T22:58:54",
-  imageEndTime: "2023-10-09 T23:58:54",
-  deliveryTime: "2023-10-10 T05:58:54",
-  revisitTime: "False"
-},{
-  latitude: -0.3157088942224249,
-  longitude: 111.84921138464108,
-  priority: 1,
-  imageType: "Low",
-  imageStartTime: "2023-10-09 T22:58:54",
-  imageEndTime: "2023-10-09 T23:58:54",
-  deliveryTime: "2023-10-10 T05:58:54",
-  revisitTime: "False"
-},{
-  latitude: -0.3157088942224249,
-  longitude: 111.84921138464108,
-  priority: 1,
-  imageType: "Low",
-  imageStartTime: "2023-10-09 T22:58:54",
-  imageEndTime: "2023-10-09 T23:58:54",
-  deliveryTime: "2023-10-10 T05:58:54",
-  revisitTime: "False"
-},{
-  latitude: -0.3157088942224249,
-  longitude: 111.84921138464108,
-  priority: 1,
-  imageType: "Low",
-  imageStartTime: "2023-10-09 T22:58:54",
-  imageEndTime: "2023-10-09 T23:58:54",
-  deliveryTime: "2023-10-10 T05:58:54",
-  revisitTime: "False"
-},{
-  latitude: -0.3157088942224249,
-  longitude: 111.84921138464108,
-  priority: 1,
-  imageType: "Low",
-  imageStartTime: "2023-10-09 T22:58:54",
-  imageEndTime: "2023-10-09 T23:58:54",
-  deliveryTime: "2023-10-10 T05:58:54",
-  revisitTime: "False"
-},{
-  latitude: -0.3157088942224249,
-  longitude: 111.84921138464108,
-  priority: 1,
-  imageType: "Low",
-  imageStartTime: "2023-10-09 T22:58:54",
-  imageEndTime: "2023-10-09 T23:58:54",
-  deliveryTime: "2023-10-10 T05:58:54",
-  revisitTime: "False"
-},{
-  latitude: -0.3157088942224249,
-  longitude: 111.84921138464108,
-  priority: 1,
-  imageType: "Low",
-  imageStartTime: "2023-10-09 T22:58:54",
-  imageEndTime: "2023-10-09 T23:58:54",
-  deliveryTime: "2023-10-10 T05:58:54",
-  revisitTime: "False"
-},{
-  latitude: -0.3157088942224249,
-  longitude: 111.84921138464108,
-  priority: 1,
-  imageType: "Low",
-  imageStartTime: "2023-10-09 T22:58:54",
-  imageEndTime: "2023-10-09 T23:58:54",
-  deliveryTime: "2023-10-10 T05:58:54",
-  revisitTime: "False"
-},{
-  latitude: -0.3157088942224249,
-  longitude: 111.84921138464108,
-  priority: 1,
-  imageType: "Low",
-  imageStartTime: "2023-10-09 T22:58:54",
-  imageEndTime: "2023-10-09 T23:58:54",
-  deliveryTime: "2023-10-10 T05:58:54",
-  revisitTime: "False"
-},{
-  latitude: -0.3157088942224249,
-  longitude: 111.84921138464108,
-  priority: 1,
-  imageType: "Low",
-  imageStartTime: "2023-10-09 T22:58:54",
-  imageEndTime: "2023-10-09 T23:58:54",
-  deliveryTime: "2023-10-10 T05:58:54",
-  revisitTime: "False"
-},{
-  latitude: -0.3157088942224249,
-  longitude: 111.84921138464108,
-  priority: 1,
-  imageType: "Low",
-  imageStartTime: "2023-10-09 T22:58:54",
-  imageEndTime: "2023-10-09 T23:58:54",
-  deliveryTime: "2023-10-10 T05:58:54",
-  revisitTime: "False"
-},{
-  latitude: -0.3157088942224249,
-  longitude: 111.84921138464108,
-  priority: 1,
-  imageType: "Low",
-  imageStartTime: "2023-10-09 T22:58:54",
-  imageEndTime: "2023-10-09 T23:58:54",
-  deliveryTime: "2023-10-10 T05:58:54",
-  revisitTime: "False"
-},{
-  latitude: -0.3157088942224249,
-  longitude: 111.84921138464108,
-  priority: 1,
-  imageType: "Low",
-  imageStartTime: "2023-10-09 T22:58:54",
-  imageEndTime: "2023-10-09 T23:58:54",
-  deliveryTime: "2023-10-10 T05:58:54",
-  revisitTime: "False"
-},{
-  latitude: -0.3157088942224249,
-  longitude: 111.84921138464108,
-  priority: 1,
-  imageType: "Low",
-  imageStartTime: "2023-10-09 T22:58:54",
-  imageEndTime: "2023-10-09 T23:58:54",
-  deliveryTime: "2023-10-10 T05:58:54",
-  revisitTime: "False"
-},{
-  latitude: -0.3157088942224249,
-  longitude: 111.84921138464108,
-  priority: 1,
-  imageType: "Low",
-  imageStartTime: "2023-10-09 T22:58:54",
-  imageEndTime: "2023-10-09 T23:58:54",
-  deliveryTime: "2023-10-10 T05:58:54",
-  revisitTime: "False"
-},{
-  latitude: -0.3157088942224249,
-  longitude: 111.84921138464108,
-  priority: 1,
-  imageType: "Low",
-  imageStartTime: "2023-10-09 T22:58:54",
-  imageEndTime: "2023-10-09 T23:58:54",
-  deliveryTime: "2023-10-10 T05:58:54",
-  revisitTime: "False"
-},
-];
+import OrderView from "@/components/order_tables/OrderView";
+import RequestsView from "@/components/order_tables/RequestsView";
+import ImageOrderCreationModal from "../components/order_creation_modals/ImageOrderCreationModal";
+import { Box, Tab, Tabs, Select, InputLabel, MenuItem, FormControl, Chip } from "@mui/material";
 
 export default function ImageOrders() {
-  // uncomment the below line when you add link in axios
-  // const [data, setData] = useState([]);
-
-  useEffect(() => {
-    // just change the url and uncomment the inner code
-    axios.get("https://jsonplaceholder.typicode.com/users").then((response) => {
-      // setData(response.data);
-    });
-  }, []);
+  const [requestViewOrderIds, setRequestViewOrderIds] = useState([])
+  const preselectedOrderRows = React.useRef([]);
+  const [showModal, setShowModal] = useState(false);
+  const [tab, setTab] = useState(0);
+  
+  let onSelectionChanged = React.useCallback((selectedRows) => {
+    setRequestViewOrderIds(selectedRows.map(row => row.id))
+    preselectedOrderRows.current = selectedRows
+  }, [])
 
   return (
     <>
@@ -220,28 +30,41 @@ export default function ImageOrders() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className='dashboard'>
-      <Sidebar/>
+        <Sidebar/>
         <DashBoardHeader />
         <div className="dashboardContent">
           <div className={styles.dashboardMainContent}>
             <Container className={styles.container}>
-              <div className={styles.dashboardContentRow}>
-                <div className={styles.TableCol}>
-                  <DataTable 
-                    search = {false}
-                    tablePagination = {true}
-                    columns = {columns}
-                    data = {data}
-                    rowSeletion = {true}
-                    actionBtn= {true}
-                    actionBtnText= "Decline"
-                  />
+              <div>
+                <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                  <Button type="button" className={styles.maintenanceOrderCreateBtn} onClick={() => setShowModal(true)}><MdAdd /> CREATE IMAGE ORDER</Button>
+                </div>
+                <div style={{ overflowX: "scroll", whiteSpace: "nowrap", display: "flex", alignItems: "center" }}>
+                  {requestViewOrderIds.map((id) => (
+                    <Chip key={id} label={`order #${id}`} style={{ margin: "5px" }} />
+                  ))}
                 </div>
               </div>
+              <Box sx={{ width: "100%", marginBottom: "15px" }}>
+                <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                  <Tabs value={tab} onChange={(_, value) => setTab(value)} aria-label="Tabs">
+                    <Tab label="Image Orders" />
+                    <Tab label="Schedule Requests" />
+                  </Tabs>
+                </Box>
+              </Box>
+              <Box sx={{ width: "100%", marginBottom: "15px" }}>
+                {tab === 0 && <OrderView orderType="imaging" preselectedRows={preselectedOrderRows.current} onSelectionChanged={onSelectionChanged}/>} 
+                {tab === 1 && <RequestsView orderType="imaging" orderIds={requestViewOrderIds}/>}
+              </Box>
             </Container>
           </div>
         </div>
       </main>
+      <ImageOrderCreationModal
+        showModal={showModal} 
+        setShowModal={setShowModal}
+      />
     </>
   )
 }

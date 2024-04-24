@@ -1,15 +1,18 @@
 import React, { useState } from 'react'
 import { Button, Form, Row, Col, Modal } from 'react-bootstrap'
-import styles from '../styles/dashboard.module.scss'
+import styles from '../../styles/dashboard.module.scss'
+import OrderCreationSuccessModal from './OrderCreationSuccessModal';
 
 
-export default function OutageRequestsModal({showModal, setShowModal}) {
+export default function ImageOrderCreationModal({showModal, setShowModal}) {
+  const [orderId, setOrderId] = useState(undefined)
+  const [modalShow, setModalShow] = useState(false);
   const handleSubmit = () => {
     setModalShow(true)
     setShowModal(false)
   }
 
-  return (
+  return <>
     <Modal 
       size="lg"
       show={showModal} 
@@ -52,5 +55,10 @@ export default function OutageRequestsModal({showModal, setShowModal}) {
         <Button type="button" className={styles.submitBtn} onClick={handleSubmit}>Submit Data</Button>
       </Modal.Footer>
     </Modal>
-  )
+    <OrderCreationSuccessModal
+      show={modalShow}
+      onHide={() => setModalShow(false)}
+      orderId={orderId}
+    />
+  </>
 }

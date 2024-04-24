@@ -43,7 +43,7 @@ export default function ScheduleView({schedules}) {
       let base_url = process.env.NEXT_PUBLIC_BASE_API_URL
       let url = `${base_url}/schedules/${scheduleInfos[currentScheduleName]?.id}/events${event_types_filter}`
       const response = await axios.get(url)
-      setScheduledEvents(response.data)
+      setScheduledEvents(response.data.data)
     } catch (error) {
       setScheduledEvents([])
       throw error;
