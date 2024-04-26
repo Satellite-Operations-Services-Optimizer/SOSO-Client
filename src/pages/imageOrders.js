@@ -5,8 +5,8 @@ import Sidebar from '../components/Sidebar'
 import DashBoardHeader from '../components/DashBoardHeader'
 import { MdAdd } from "react-icons/md";
 import styles from '../styles/dashboard.module.scss'
-import OrderView from "@/components/order_tables/OrderView";
-import RequestsView from "@/components/order_tables/RequestsView";
+import OrderView from "@/components/tables/OrderView";
+import RequestsView from "@/components/tables/RequestsView";
 import ImageOrderCreationModal from "../components/order_creation_modals/ImageOrderCreationModal";
 import { Box, Tab, Tabs, Select, InputLabel, MenuItem, FormControl, Chip } from "@mui/material";
 

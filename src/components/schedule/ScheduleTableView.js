@@ -1,5 +1,5 @@
 import styles from '@/styles/dashboard.module.scss'
-import DataTable from '../order_tables/DataTable'
+import DataTable from '../tables/DataTable'
 import moment from 'moment'
 
 const columns = [
@@ -21,6 +21,10 @@ const columns = [
   },
   // Add more columns as needed
 ];
+
+const columns_new = [
+]
+
 export default function ScheduleTableView({events}) {
     if (!events?.length) return <>No Events Scheduled</>
     events = events.map((event) => {

@@ -8,7 +8,8 @@ import axios from "axios";
 import SystemTime from "../components/SystemTime";
 import ScheduleRequests from "../components/ScheduleRequests";
 import ScheduleTimeline from "../components/schedule/ScheduleTimeline"
-import ScheduleTableView from "@/components/schedule/ScheduleTableView";
+import EventsView from "@/components/tables/EventsView";
+import { MultiSelect } from "react-multi-select-component";
 import { Box, Tab, Tabs, Select, InputLabel, MenuItem, FormControl } from "@mui/material";
 
 export async function getStaticProps() {
@@ -25,25 +26,30 @@ export async function getStaticProps() {
   }
 }
 
-let displayed_event_types = ["imaging", "maintenance", "gs_outage", "sat_outage"]
+let eventTypeOptions = ["imaging", "maintenance", "gs_outage", "sat_outage", 'contact', 'eclipse', 'capture', 'transmission_outage'].map((event_type) => ({label: event_type, value: event_type}))
+// default is first four options
+let defaultEventTypes = eventTypeOptions.slice(0, 4)
 
 export default function ScheduleView({schedules}) {
   const defaultScheduleName = "Default Schedule"
   const [tab, setTab] = useState(0);
   const [currentScheduleName, setCurrentScheduleName] = useState(defaultScheduleName)
   const [scheduledEvents, setScheduledEvents] = useState([])
+  const [scheduleId, setScheduleId] = useState(null)
+  const [selectedEventTypes, setSelectedEventTypes] = useState(defaultEventTypes)
 
   const updateScheduledEvents = async (currentScheduleName, scheduleInfos) => {
     try {
-      let event_types_filter = ""
-      if (displayed_event_types.length > 0) {
-        event_types_filter = '?event_types=' + displayed_event_types.join('&event_types=')
+      let eventTypesFilter = ""
+      if (selectedEventTypes.length > 0) {
+        eventTypesFilter = '?event_types=' + selectedEventTypes.map((type) => type.value).join('&event_types=')
       }
       
       let base_url = process.env.NEXT_PUBLIC_BASE_API_URL
-      let url = `${base_url}/schedules/${scheduleInfos[currentScheduleName]?.id}/events${event_types_filter}`
+      let url = `${base_url}/schedules/${scheduleInfos[currentScheduleName]?.id}/events${eventTypesFilter}`
       const response = await axios.get(url)
       setScheduledEvents(response.data.data)
+      setScheduleId(scheduleInfos[currentScheduleName]?.id)
     } catch (error) {
       setScheduledEvents([])
       throw error;
@@ -52,10 +58,10 @@ export default function ScheduleView({schedules}) {
 
   useEffect(() => {
     updateScheduledEvents(currentScheduleName, schedules)
-  }, [currentScheduleName])
+  }, [currentScheduleName, selectedEventTypes])
 
   const [timeConstraint, setTimeConstraint] = useState(1);
-  
+
   return (
     <>
       <Head>
@@ -84,7 +90,7 @@ export default function ScheduleView({schedules}) {
                   ))}
                 </Select>
               </FormControl>
-              <FormControl>
+              {/* <FormControl>
                 <InputLabel id="time-constraint-label">Time Constraint</InputLabel>
                 <Select
                   labelId="time-constraint-label"
@@ -97,22 +103,28 @@ export default function ScheduleView({schedules}) {
                     <MenuItem key={value} value={value + 1}>{value + 1} minute(s)</MenuItem>
                   ))}
                 </Select>
+              </FormControl> */}
+              <FormControl>
+                <MultiSelect
+                  options={eventTypeOptions}
+                  value={selectedEventTypes}
+                  onChange={setSelectedEventTypes}
+                  labelledBy="Select Event Types"
+                />
               </FormControl>
               <Box sx={{ width: "100%", marginBottom: "15px" }}>
                 <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
                   <Tabs value={tab} onChange={(_, value) => setTab(value)} aria-label="Tabs">
                     <Tab label="Table View" />
                     <Tab label="Timeline View" />
-                    <Tab label="SYSTEM TIME" />
-                    <Tab label="SCHEDULE REQUESTS" />
+                    <Tab label="System Time" />
                   </Tabs>
                 </Box>
               </Box>
               <Box sx={{ width: "100%", marginBottom: "15px" }}>
-                {tab === 0 && <ScheduleTableView events={scheduledEvents}/>} 
-                {tab === 1 && <ScheduleTimeline events={scheduledEvents}/>}
+                {tab === 0 && <EventsView scheduleId={scheduleId} eventTypes={selectedEventTypes.map((type) => type.value)} />} 
+                {tab === 1 && <ScheduleTimeline scheduleId={scheduleId} eventTypes={selectedEventTypes.map((type) => type.value)}/>}
                 {tab == 2 && <SystemTime />} 
-                {tab == 3 && <ScheduleRequests/>}
               </Box>
             </Container>
           </div>

@@ -20,6 +20,15 @@ export function transformOrderDataForDisplay(order) {
     }
 }
 
+export function transformEventDataForDisplay(scheduleEvent) {
+    return {
+        ...scheduleEvent,
+        display_start_time: scheduleEvent.start_time ? moment(scheduleEvent.start_time).format("llll") : undefined,
+        // display_end_time: order.window_end ? moment(scheduleEvent.end_time).format("llll") : undefined,
+        display_duration: moment.duration(scheduleEvent.duration, 'seconds').format("h [hrs] m [mins] s [secs]"),
+    }
+}
+
 // CREATE TYPE schedule_request_status AS ENUM ('received', 'processing', 'rejected', 'declined', 'displaced', 'scheduled', 'sent_to_gs');
 function addStatusEmoji(status) {
     switch (status) {
@@ -30,7 +39,7 @@ function addStatusEmoji(status) {
         case 'rejected':
             return '❌'
         case 'declined':
-            return '❌'
+            return '🗑️'
         case 'displaced':
             return "⏳"
         case 'scheduled':

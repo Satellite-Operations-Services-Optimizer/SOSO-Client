@@ -7,8 +7,8 @@ import { transformOrderDataForDisplay } from '../utils'
 
 const imageRequestColumns = [
     { name: 'ID', selector: row => row.id, sortable: true },
-    { name: 'Order ID', selector: row => row.order_id, sortable: true },
     { name: 'Status', selector: row => row.display_status, sortable: true, sortField: 'status' },
+    { name: 'Order ID', selector: row => row.order_id, sortable: true },
     // { name: 'Order Type', selector: row => row.order_type, sortable: true },
     { name: 'Latitude', selector: row => row.latitude, sortable: true },
     { name: 'Longitude', selector: row => row.longitude, sortable: true },
@@ -25,8 +25,9 @@ const imageRequestColumns = [
 
 const maintenanceRequestColumns = [
     { name: 'ID', selector: row => row.id, sortable: true },
-    { name: 'Order ID', selector: row => row.order_id, sortable: true },
     { name: 'Status', selector: row => row.display_status, sortable: true, sortField: 'status' },
+    { name: 'Order ID', selector: row => row.order_id, sortable: true },
+    { name: 'Description', selector: row => row.description, sortable: true },
     // { name: 'Order Type', selector: row => row.order_type, sortable: true },
     { name: 'Window start', selector: row => row.display_window_start, sortable: true, sortField: 'window_start'},
     { name: 'Window end', selector: row => row.display_window_end, sortable: true, sortField: 'window_end' },
@@ -40,8 +41,8 @@ const maintenanceRequestColumns = [
 
 const outageRequestColumns = [
     { name: 'ID', selector: row => row.id, sortable: true },
-    { name: 'Order ID', selector: row => row.order_id, sortable: true },
     { name: 'Status', selector: row => row.display_status, sortable: true, sortField: 'status' },
+    { name: 'Order ID', selector: row => row.order_id, sortable: true },
     // { name: 'Order Type', selector: row => row.order_type, sortable: true },
     { name: 'Asset name', selector: row => row.asset_name, sortable: true },
     { name: 'Start time', selector: row => row.display_window_start, sortable: true },
@@ -82,6 +83,19 @@ export default function RequestsView({orderType, orderIds}) {
         }
     }
 
+    let declineOrders = async (requestIds) => {
+        let base_url = process.env.NEXT_PUBLIC_BASE_API_URL
+        try {
+            for (let requestId of requestIds) {
+                await axios.post(`${base_url}/schedules/requests/${requestId}/decline`)
+                // sleep to wait for scheduler to decline the request
+                await new Promise(r => setTimeout(r, 500));
+            }
+        } catch (error) {
+            throw error;
+        }
+    }
+
     return <>
         <div className={styles.dashboardContentRow}>
             <div className={styles.TableCol}>
@@ -90,7 +104,10 @@ export default function RequestsView({orderType, orderIds}) {
                     columns={columns}
                     fetchPaginatedData={fetchPaginatedRequestsData}
                     isSelectable={true}
-                    onSelectedRowsChange={selectedRows => console.log(selectedRows)}
+                    actionTitle="Decline"
+                    actionWarning="Are you sure you want to decline the selected requests?"
+                    handleAction={(rows) => declineOrders(rows.map(row => row.id))}
+                    rowDisabledCriteria={(row) => row.status == 'declined' || row.status == 'rejected'}
                 />
             </div>
         </div>

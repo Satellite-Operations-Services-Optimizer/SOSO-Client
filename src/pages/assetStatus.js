@@ -5,7 +5,7 @@ import Head from "next/head";
 import { Container, Button } from "react-bootstrap";
 import Sidebar from "../components/Sidebar";
 import DashBoardHeader from "../components/DashBoardHeader";
-import DataTable from "../components/order_tables/DataTable";
+import DataTable from "../components/tables/DataTable";
 import styles from "../styles/dashboard.module.scss";
 import AddGSModal from "../components/AddGSModal";
 import AddSATModal from "../components/AddSATModal";

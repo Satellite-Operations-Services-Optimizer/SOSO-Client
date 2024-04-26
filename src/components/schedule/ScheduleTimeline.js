@@ -6,6 +6,8 @@ import { ButtonGroup, Button, IconButton } from "@mui/material";
 import { MyLocation } from '@mui/icons-material'
 import moment from "moment";
 import EventDisplay from "./EventDisplay";
+import axios from 'axios'
+import { transformEventDataForDisplay } from "../utils";
 
 let eventColors = {
   "eclipse": "grey",
@@ -17,30 +19,62 @@ let eventColors = {
   "sat_outage": "red",
 }
 
-export default function ScheduleTimeline({events}) {
-    if (!events?.length) return <>No Events Scheduled</>
+export default function ScheduleTimeline({scheduleId, eventTypes}) {
     const timelineRef = useRef(null)
     const [timeline, setTimeline] = useState(null)
     const [rollingMode, setRollingMode] = useState(true)
+    const [data, setData] = useState([])
 
-    let default_start = localStorage.getItem('timelineStart') || undefined
-    let default_end = localStorage.getItem('timelineEnd') || undefined
-    let default_follow = !(default_start & default_end)
-    let options = {
-        start: default_start,
-        end: default_end,
+
+    const [options, setOptions] = useState({
+        start: undefined,
+        end: undefined,
         editable: false,
         tooltip: {followMouse: false},
         rollingMode: {follow: false},
         zoomMin: 1000 * 60, // one minute in milliseconds
         zoomMax: 1000 * 60 * 60 * 24 * 31, // about one month in milliseconds 
+    })
+
+    let retrieveEvents = async () => {
+        try {
+            let base_url = process.env.NEXT_PUBLIC_BASE_API_URL
+
+            let params = ""
+            if (eventTypes.length > 0) {
+                params = 'event_types=' + eventTypes.join('&event_types=')
+            }
+            if (params.length > 0) {
+                params = '?' + params
+            }
+
+            let endpoint = `${base_url}/schedules/${scheduleId}/events${params}`
+            const response = await axios.get(endpoint)
+            let transformedData = response.data.data.map(order => transformEventDataForDisplay(order))
+            setData(parse_events(transformedData))
+        } catch (error) {
+            throw error;
+        }
+    }
+    useEffect(() => {
+        retrieveEvents()
+    }, [scheduleId, eventTypes])
+
+    let initializeTime = async (tmline) => {
+        let base_url = process.env.NEXT_PUBLIC_BASE_API_URL
+        let response = await axios.get(`${base_url}/schedules/default`)
+        let schedule = response.data
+
+        let currentTime = new Date().getTime()
+        let timeOffsetMillis = schedule.time_offset * 1000
+        let startTime = new Date(currentTime + timeOffsetMillis)
+        let windowSpan = 1000 * 60 * 60 * 12 // one week in milliseconds
+        let endTime = new Date(startTime.getTime() + windowSpan)
+        tmline.setWindow(startTime, endTime)
     }
 
-
-
-    let {items, groups} = parse_events(events||[])
     useEffect(() => {
-        let tmline = new Timeline(timelineRef.current, items, groups, options)
+        let tmline = new Timeline(timelineRef.current, data.items, data.groups, options)
         setTimeline(tmline)
         tmline.on('rangechanged', function (properties) {
             const { start, end } = properties;
@@ -51,10 +85,16 @@ export default function ScheduleTimeline({events}) {
             tmline.setOptions({rollingMode: false})
             tmline.setWindow(default_start, default_end);
         })
+        initializeTime(tmline)
         return () => {
             tmline.destroy()
         }
     }, [])
+
+    useEffect(() => {
+        if (!timeline || !data) return
+        timeline.setData(data)
+    }, [data])
     
     useEffect(() => {
         if (!timeline) return

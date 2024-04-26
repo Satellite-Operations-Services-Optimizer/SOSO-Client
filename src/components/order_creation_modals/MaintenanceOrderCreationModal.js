@@ -5,25 +5,28 @@ import { Typeahead } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 import axios from "axios";
 import OrderCreationSuccessModal from './OrderCreationSuccessModal';
+import moment from 'moment'
 import Datetime from 'react-datetime'
 import "react-datetime/css/react-datetime.css";
+import { set } from 'lodash';
 
 
 export default function MaintenanceOrderCreationModal({showModal, setShowModal}) {
-  const defaultMinRepeatFrequencyUnits = "days"
   const [maintenanceId, setMaintenanceId] = useState("ID (int)");
   const [modalShow, setModalShow] = useState(false);
+  const [targetName, setTargetName] = useState(null)
   const [satelliteNames, setSatelliteNames] = useState([]);
   const [groundstationNames, setGroundstationNames] = useState([])
-  const [windowStart, setWindowStart] = useState([new Date(), new Date()])
-  const [windowEnd, setWindowEnd] = useState([new Date(), new Date()])
-  const [minRepeatFrequencyUnits, setMinRepeatFrequencyUnits] = useState(defaultMinRepeatFrequencyUnits)
+  const [windowStart, setWindowStart] = useState(null)
+  const [windowEnd, setWindowEnd] = useState(null)
+  const [success, setSuccess] = useState(false)
+  const formRef = React.createRef()
 
-  const timeUnitOptions = ["mins", "hours", "days", "weeks", "months", "years"]
+  const timeUnitOptions = ["minutes", "hours", "days", "weeks", "months", "years"]
 
   let fetchAssetNames = async () => {
     let base_url = process.env.NEXT_PUBLIC_BASE_API_URL
-    let response = await axios.get(`${base_url}/assets/names`)
+    let response = await axios.get(`${base_url}/assets/names?asset_type=satellite`)
     setSatelliteNames(response.data.satellites)
     setGroundstationNames(response.data.groundstations)
   }
@@ -32,7 +35,38 @@ export default function MaintenanceOrderCreationModal({showModal, setShowModal})
     fetchAssetNames()
   }, [])
 
-  const handleSubmit = () => {
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const formData = new FormData(formRef.current),
+    formDataObj = Object.fromEntries(formData.entries())
+
+    let base_url = process.env.NEXT_PUBLIC_BASE_API_URL
+    try {
+      let body = {
+        Target: targetName,
+        Activity: formDataObj.activity,
+        Window: {
+          Start: windowStart.toISOString(),
+          End: windowEnd.toISOString(),
+        },
+        Duration: moment.duration(formDataObj.duration, formDataObj.durationUnit).asSeconds().toString(),
+        RepeatCycle: {
+          Frequency: {
+            MinimumGap: moment.duration(formDataObj.repeatFrequency, formDataObj.repeatFrequencyUnit).asSeconds().toString(),
+            MaximumGap: moment.duration(formDataObj.repeatFrequencyMax, formDataObj.repeatFrequencyMaxUnit).asSeconds().toString(),
+          },
+          Repetition: formDataObj.repeatCount,
+        },
+        PayloadOutage: formDataObj.payloadOutage
+      }
+      let response = await axios.post(`${base_url}/maintenance/orders/create`, body)
+      setSuccess(true)
+      setMaintenanceId(response.data)
+    } catch (error) {
+      setSuccess(false)
+      throw error;
+    }
+
     setModalShow(true)
     setShowModal(false)
   }
@@ -50,13 +84,14 @@ export default function MaintenanceOrderCreationModal({showModal, setShowModal})
           <Modal.Title className={styles.customModalTitle}>Maintenance Request Form</Modal.Title>
         </Modal.Header>
         <Modal.Body className={styles.customModalBody}>
-          <Form className={styles.customForm}>
+          <Form onSubmit={handleSubmit} className={styles.customForm} ref={formRef}>
             <Row className={styles.formRow}>
               <Form.Group as={Col} md="6" className={styles.formCol}>
                 <div className={styles.materialInput}>
                   <Typeahead
                     id="target-typeahead"
                     options={satelliteNames.concat(groundstationNames)}
+                    onChange={(selections) => selections.length>0 ? setTargetName(selections[0]) : setTargetName(null)}
                     placeholder="Target"
                     required
                   />
@@ -64,7 +99,7 @@ export default function MaintenanceOrderCreationModal({showModal, setShowModal})
               </Form.Group>
               <Form.Group as={Col} md="6" className={styles.formCol}>
                 <div className={styles.materialInput}>
-                  <Form.Control type="text" required />
+                  <Form.Control type="text" name='activity' required />
                   <span className={styles.inputBar}></span>
                   <Form.Label>Activity</Form.Label>
                 </div>
@@ -82,8 +117,28 @@ export default function MaintenanceOrderCreationModal({showModal, setShowModal})
               <Form.Group as={Col} md="6" className={styles.formCol}>
                 <div className={styles.materialInput}>
                   <InputGroup className="mb-3">
-                    <Form.Control placeholder="Duration" required/>
-                    <Form.Select required>
+                    <Form.Control placeholder="Duration" name="duration" required/>
+                    <Form.Select name="durationUnit" required>
+                      {timeUnitOptions.map((option) => {
+                        return (<option value={option}>{option}</option>)
+                      })}
+                    </Form.Select>
+                    <span className={styles.inputBar}></span>
+                  </InputGroup>
+                </div>
+              </Form.Group>
+              <Form.Group as={Col} md="6" className={styles.formCol}>
+                <div className={styles.materialInput}>
+                  <Form.Control type="text" name="repeatCount" required />
+                  <span className={styles.inputBar}></span>
+                  <Form.Label>Repeat Count</Form.Label>
+                </div>
+              </Form.Group>
+              <Form.Group as={Col} md="6" className={styles.formCol}>
+                <div className={styles.materialInput}>
+                  <InputGroup className="mb-3">
+                    <Form.Control name="repeatFrequency" placeholder="Repeat frequency (min)" />
+                    <Form.Select name="repeatFrequencyUnit">
                       {timeUnitOptions.map((option) => {
                         return (<option value={option}>{option}</option>)
                       })}
@@ -95,21 +150,8 @@ export default function MaintenanceOrderCreationModal({showModal, setShowModal})
               <Form.Group as={Col} md="6" className={styles.formCol}>
                 <div className={styles.materialInput}>
                   <InputGroup className="mb-3">
-                    <Form.Control placeholder="Repeat frequency (min)" />
-                    <Form.Select>
-                      {timeUnitOptions.map((option) => {
-                        return (<option value={option}>{option}</option>)
-                      })}
-                    </Form.Select>
-                    <span className={styles.inputBar}></span>
-                  </InputGroup>
-                </div>
-              </Form.Group>
-              <Form.Group as={Col} md="6" className={styles.formCol}>
-                <div className={styles.materialInput}>
-                  <InputGroup className="mb-3">
-                    <Form.Control placeholder="Repeat frequency (max)" />
-                    <Form.Select>
+                    <Form.Control name="repeatFrequencyMax" placeholder="Repeat frequency (max)" />
+                    <Form.Select name="repeatFrequencyMaxUnit">
                       {timeUnitOptions.map((option) => {
                         return (<option value={option}>{option}</option>)
                       })}
@@ -120,7 +162,7 @@ export default function MaintenanceOrderCreationModal({showModal, setShowModal})
               </Form.Group>
               <Form.Group as={Col} md="6" className={styles.formCol}>
                 <div className={styles.materialSelect}>
-                  <Form.Select required>
+                  <Form.Select name="payloadOutage" required>
                     <option value={false}>False</option>
                     <option value={true}>True</option>
                   </Form.Select>
@@ -140,6 +182,7 @@ export default function MaintenanceOrderCreationModal({showModal, setShowModal})
         show={modalShow}
         onHide={() => setModalShow(false)}
         orderId={maintenanceId}
+        success={success}
       />
     </>
   )

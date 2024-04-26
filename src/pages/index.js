@@ -14,7 +14,7 @@ import DashBoardHeader from "../components/DashBoardHeader";
 import styles from "../styles/dashboard.module.scss";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
-import DataTable from "@/components/order_tables/DataTable";
+import DataTable from "@/components/tables/DataTable";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { PieChart } from "@mui/x-charts/PieChart";
 import axios from "axios";

@@ -44,6 +44,7 @@ const imageOrderColumns = [
 
 const outageOrderColumns = [
     { name: 'ID', selector: row => row.id, sortable: true },
+    { name: 'Asset name', selector: row => row.asset_name, sortable: true },
     { name: 'Start time', selector: row => row.display_window_start, sortable: true, sortField: 'window_start' },
     { name: 'End time', selector: row => row.display_window_end, sortable: true, sortField: 'window_end' },
     { name: 'Duration', selector: row => row.display_duration, sortable: true, sortField: 'duration' },
@@ -71,6 +72,17 @@ export default function OrderView({orderType, preselectedRows, onSelectionChange
         }
     }
 
+    let declineRequests = async (orderIds) => {
+        let base_url = process.env.NEXT_PUBLIC_BASE_API_URL
+        try {
+            for (let orderId of orderIds) {
+                await axios.post(`${base_url}/${orderType}/orders/${orderId}/requests/decline`)
+            }
+        } catch (error) {
+            throw error;
+        }
+    }
+
     return <>
         <div className={styles.dashboardContentRow}>
             <div className={styles.TableCol}>
@@ -80,6 +92,9 @@ export default function OrderView({orderType, preselectedRows, onSelectionChange
                     fetchPaginatedData={fetchPaginatedData}
                     preselectedRows={preselectedRows}
                     onSelectedRowsChange={selectedRows => onSelectionChanged(selectedRows)}
+                    actionTitle="Decline"
+                    actionWarning="Are you sure you want to decline all schedule requests from the selected orders?"
+                    handleAction={(rows) => declineRequests(rows.map(row => row.id))}
                 />
             </div>
         </div>

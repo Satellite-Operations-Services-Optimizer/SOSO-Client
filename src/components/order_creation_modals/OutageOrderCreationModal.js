@@ -6,16 +6,42 @@ import { Typeahead } from 'react-bootstrap-typeahead';
 import Datetime from 'react-datetime'
 import "react-datetime/css/react-datetime.css";
 import axios from 'axios'
+import { set } from 'lodash';
 
 
 export default function OutageOrderCreationModal({showModal, setShowModal}) {
   const [modalShow, setModalShow] = useState(false);
   const [satelliteNames, setSatelliteNames] = useState([]);
   const [groundstationNames, setGroundstationNames] = useState([])
+  const [targetName, setTargetName] = useState([null])
   const [orderId, setOrderId] = useState(undefined)
-  const [startTime, setStartTime] = useState(new Date())
-  const [endTime, setEndTime] = useState(new Date())
-  const handleSubmit = () => {
+  const [startTime, setStartTime] = useState(null)
+  const [endTime, setEndTime] = useState(null)
+  const [success, setSuccess] = useState(false)
+  const formRef = React.createRef()
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const formData = new FormData(formRef.current),
+    formDataObj = Object.fromEntries(formData.entries())
+
+    let base_url = process.env.NEXT_PUBLIC_BASE_API_URL
+    try {
+      let body = {
+        Target: targetName,
+        Activity: "Outage",
+        Window: {
+          Start: startTime.toISOString(),
+          End: endTime.toISOString(),
+        }
+      }
+      let response = await axios.post(`${base_url}/outage/orders/create`, body)
+      setSuccess(true)
+      setOrderId(response.data)
+    } catch (error) {
+      setSuccess(false)
+      throw error;
+    }
+
     setModalShow(true)
     setShowModal(false)
   }
@@ -43,13 +69,14 @@ export default function OutageOrderCreationModal({showModal, setShowModal}) {
         <Modal.Title className={styles.customModalTitle}>Outage Requests Form</Modal.Title>
       </Modal.Header>
       <Modal.Body className={styles.customModalBody}>
-        <Form className={styles.customForm}>
+        <Form className={styles.customForm} ref={formRef}>
           <Row className={styles.formRow}>
             <Form.Group as={Col} md="12" className={styles.formCol}>
               <div className={styles.materialInput}>
                 <Typeahead
                   id="target-typeahead"
                   options={satelliteNames.concat(groundstationNames)}
+                  onChange={(selections) => selections.length>0 ? setTargetName(selections[0]) : setTargetName(null)}
                   placeholder="Target"
                   required
                 />
@@ -78,6 +105,7 @@ export default function OutageOrderCreationModal({showModal, setShowModal}) {
       show={modalShow}
       onHide={() => setModalShow(false)}
       orderId={orderId}
+      success={success}
     />
   </>
 }
